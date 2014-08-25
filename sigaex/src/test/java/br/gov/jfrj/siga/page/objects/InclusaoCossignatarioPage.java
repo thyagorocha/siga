@@ -29,7 +29,7 @@ public class InclusaoCossignatarioPage {
 		cossignatario.clear();
 		cossignatario.sendKeys(propDocumento.getProperty("siglaDestinatario"));		
 		funcaoLocalidade.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id("cosignatarioSelSpan")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("cosignatarioSelSpan")));
 		funcaoLocalidade.clear();
 		funcaoLocalidade.sendKeys(propDocumento.getProperty("funcaoLocalidade"));
 		botaoOk.click();

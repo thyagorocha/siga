@@ -67,8 +67,8 @@ public class TransferenciaPage {
 			util.preencheElemento(driver, subscritor, propDocumentos.getProperty("siglaSubscritor"));
 			util.preencheElemento(driver, funcaoLotacao, propDocumentos.getProperty("funcaoLocalidade"));
 			util.getSelect(driver, despacho).selectByVisibleText(propDocumentos.getProperty("despacho"));
-			new WebDriverWait(driver, 15).until(util.trocaURL(URL));
-			new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoOk));
+			new WebDriverWait(driver, 30).until(util.trocaURL(URL));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
 			botaoOk.click();
 		} finally {
 			util.changeFromPopup(driver);
@@ -110,9 +110,9 @@ public class TransferenciaPage {
 			RegistraAssinaturaManualPage registraAssinaturaManualPage = PageFactory.initElements(driver, RegistraAssinaturaManualPage.class);
 			registraAssinaturaManualPage.registarAssinaturaManual();
 			
-			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Juntado')]")));			
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Juntado')]")));			
 			operacoesDocumentoPage.clicarLinkDesentranhar();
-			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));	
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));	
 			
 			operacoesDocumentoPage.clicarlinkJuntar();
 			JuntadaDocumentoPage juntadaDocumentoPage = PageFactory.initElements(driver, JuntadaDocumentoPage.class);

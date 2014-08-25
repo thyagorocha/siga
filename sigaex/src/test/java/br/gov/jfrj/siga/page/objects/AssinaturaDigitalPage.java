@@ -18,7 +18,7 @@ public class AssinaturaDigitalPage {
 	}
 	
 	public void registrarAssinaturaDigital(String baseURL, String codigoDocumento) {
-		new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(., 'Nº')]")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(., 'Nº')]")));
 		driver.get(baseURL + "/sigaex/expediente/mov/simular_assinatura.action?sigla=" + codigoDocumento);		
 	}
 	

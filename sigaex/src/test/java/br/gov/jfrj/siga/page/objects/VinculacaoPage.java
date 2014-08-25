@@ -47,8 +47,8 @@ public class VinculacaoPage {
 		util.preencheElemento(driver, data, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver, responsavel, propDocumentos.getProperty("responsavel"));
 		documento.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoDocumento)).click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoDocumento)).click();
 		
 		System.out.println("WindowHandle size antes: " + driver.getWindowHandles().size());
 		botaoDocumento.click();
@@ -62,7 +62,7 @@ public class VinculacaoPage {
 			util.changeFromPopup(driver);
 		}
 
-		new WebDriverWait(driver, 15).until(ExpectedConditions.titleIs("SIGA - Referência"));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();		
+		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Referência"));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();		
 	}
 }

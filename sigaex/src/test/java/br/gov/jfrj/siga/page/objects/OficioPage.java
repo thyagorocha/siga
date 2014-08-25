@@ -36,7 +36,7 @@ public class OficioPage extends EditaDocumentoPage {
 	public void criaOficio(Properties propDocumentos) {
 		preencheDocumentoInterno(propDocumentos, "Ofício", "Ofício", propDocumentos.getProperty("internoProduzido"), Boolean.FALSE);
 		util.getSelect(driver, tipoAutoridade).selectByVisibleText(propDocumentos.getProperty("tipoAutoridade"));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div/div/form/table/tbody/tr[14]/td/span/div[1]/table/tbody/tr/td/div/table/tbody/tr/td/div/table/tbody/tr/td/span/b")));		
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div/div/form/table/tbody/tr[14]/td/span/div[1]/table/tbody/tr/td/div/table/tbody/tr/td/div/table/tbody/tr/td/span/b")));		
 		util.getSelect(driver, generoAutoridade).selectByVisibleText(propDocumentos.getProperty("generoAutoridade"));		
 		util.preencheElemento(driver, enderecoDestinatario, propDocumentos.getProperty("enderecoDestinatario"));
 		botaoOk.click();

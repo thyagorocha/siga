@@ -2,11 +2,7 @@ package br.gov.jfrj.siga.integration.test;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
@@ -41,7 +37,6 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 		try {
 			efetuaLogin();
 			propDocumentos.load(new FileInputStream(file));
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			editaDocumentoPage = PageFactory.initElements(driver, EditaDocumentoPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);

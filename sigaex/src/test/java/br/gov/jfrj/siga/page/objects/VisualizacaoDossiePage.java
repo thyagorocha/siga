@@ -28,8 +28,8 @@ public class VisualizacaoDossiePage {
 			System.out.println("Texto: " + element.getText());
 			element.click();
 
-			new WebDriverWait(driver, 15).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("painel")));
-			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'Nº')]")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("painel")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'Nº')]")));
 			driver.switchTo().window(windowHandle);
 		}
 	}

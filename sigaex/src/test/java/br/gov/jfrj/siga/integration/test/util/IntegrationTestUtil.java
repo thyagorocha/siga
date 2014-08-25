@@ -15,21 +15,21 @@ public class IntegrationTestUtil {
 	private String winHandle;
 	
 	public void preencheElemento(WebDriver driver, WebElement element, String valor) {
-		//new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOf(element));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element));
 		element.click();
 		element.clear();
 		element.sendKeys(valor);
 	}
 	
 	public Select getSelect(WebDriver driver, WebElement element) {
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element)).click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element));
 		element.click();
 		return new Select(element);
 	}
 		
 	public WebDriver openPopup(WebDriver driver) {
 		winHandle = driver.getWindowHandle();
-		new WebDriverWait(driver, 15).until(popupDisponivel());
+		new WebDriverWait(driver, 30).until(popupDisponivel());
 		
 		Set<String> windowHandles = driver.getWindowHandles();
 		
@@ -40,13 +40,14 @@ public class IntegrationTestUtil {
 		}
 
 		driver.manage().window().maximize();		
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		return driver;
 	}
 	
-	public WebDriver closePopup(WebDriver driver) {
-		driver.close();
-		return changeFromPopup(driver);
+	public void closePopup(WebDriver driver) {
+		if(!winHandle.equals(driver.getWindowHandle())) {
+			driver.close();
+			changeFromPopup(driver);
+		}
 	}
 	
 	public WebDriver changeFromPopup(WebDriver driver) {

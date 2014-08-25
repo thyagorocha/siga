@@ -47,8 +47,8 @@ public class ApensacaoPage {
 		util.preencheElemento(driver, data, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver, responsavel, propDocumentos.getProperty("responsavel"));		
 		documentoMestre.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoDocumento));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoDocumento));
 		
 		System.out.println("WindowHandle size antes: " + driver.getWindowHandles().size());
 		botaoDocumento.click();
@@ -63,7 +63,7 @@ public class ApensacaoPage {
 			util.changeFromPopup(driver);
 		}
 
-		new WebDriverWait(driver, 15).until(ExpectedConditions.titleIs("SIGA - Apensar Documento"));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();		
+		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Apensar Documento"));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();		
 	}
 }

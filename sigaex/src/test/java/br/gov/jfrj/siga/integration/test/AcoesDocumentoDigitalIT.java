@@ -42,17 +42,13 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		try {
 			efetuaLogin();
 			propDocumentos.load(new FileInputStream(file));
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
 			
 			PortariaPage portariaPage = PageFactory.initElements(driver, PortariaPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
 			portariaPage.criaPortaria(propDocumentos);
-			
-			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
-			//codigoDocumento = "TMP-4967";
-								
+														
 			System.out.println("Código do documento: " + codigoDocumento);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -69,6 +65,8 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 				driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);
 				//operacoesDocumentoPage.efetuaBuscaDocumento(codigoDocumento);					
 			}
+			
+			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -86,8 +84,8 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAssinarDigitalmente();
 		AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
 		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);
-		new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));		
-		new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Assinatura')]")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));		
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Assinatura')]")));
 	}
 	
 	@Test(enabled = true, priority = 1)
@@ -95,7 +93,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAnexarArquivo();
 		AnexoPage anexoPage = PageFactory.initElements(driver, AnexoPage.class);
 		anexoPage.anexarArquivo(propDocumentos);
-		Assert.assertTrue(new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.linkText("teste.pdf"))) != null);
+		Assert.assertTrue(new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("teste.pdf"))) != null);
 		anexoPage.clicarBotaovoltar();
 	}
 	
@@ -104,7 +102,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
 		transferenciaPage.despacharDocumento(propDocumentos);
-		new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
 	}
 
 	@AfterClass

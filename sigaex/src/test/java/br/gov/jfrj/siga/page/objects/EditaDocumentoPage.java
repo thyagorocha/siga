@@ -27,10 +27,10 @@ public class EditaDocumentoPage {
 	protected WebElement acesso;
 	
 	@FindBy(id="eletronicoCheck1")
-	protected WebElement Digital;
+	protected WebElement digital;
 	
 	@FindBy(id="eletronicoCheck2")
-	protected WebElement Fisico;
+	protected WebElement fisico;
 
 	@FindBy(id = "frm_dtDocOriginalString")
 	protected WebElement dataOriginalDocumento;
@@ -107,17 +107,19 @@ public class EditaDocumentoPage {
 		
 	public void preencheDocumento(String origemDocumento, Boolean isDigital, Properties propDocumentos) {		
 		if(isDigital) {
-			Digital.click();
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(digital));
+			digital.click();			
 		} else {
-			Fisico.click();
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(fisico));
+			fisico.click();
 		}
 		util.getSelect(driver, origem).selectByVisibleText(origemDocumento);
-		util.preencheElemento(driver,dataDocumento, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
+		util.preencheElemento(driver,dataDocumento, new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()));
 		preencheTipoDestinatario(propDocumentos.getProperty("tipoDestinatarioCriacao"), propDocumentos.getProperty("siglaDestinatarioCriacao"));
 		util.preencheElemento(driver,funcaoLotacaoLocalidade, propDocumentos.getProperty("funcaoLocalidade"));
 		util.preencheElemento(driver,classificacao, propDocumentos.getProperty("classificacao"));
-		descricao.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id("classificacaoSelSpan"))).click();
+		dataDocumento.click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("classificacaoSelSpan")));
 		util.preencheElemento(driver,descricao,  propDocumentos.getProperty("descricao"));	
 	}
 
@@ -129,7 +131,7 @@ public class EditaDocumentoPage {
 		preencheDocumento(origemDocumento, isDigital, propDocumentos);
 		util.preencheElemento(driver,siglaSubscritor, propDocumentos.getProperty("siglaSubscritor"));
 		descricao.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
 	}	
 	
 	public void preencheDocumentoInternoSemModelo(Properties propDocumentos, String tipoDocumento, String origemDocumento, Boolean isDigital) {
@@ -138,7 +140,7 @@ public class EditaDocumentoPage {
 		preencheDocumento(origemDocumento, isDigital, propDocumentos);
 		util.preencheElemento(driver,siglaSubscritor, propDocumentos.getProperty("siglaSubscritor"));
 		descricao.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
 	}	
 	
 	public void preencheDocumentoExterno(Properties propDocumentos) {
@@ -147,7 +149,7 @@ public class EditaDocumentoPage {
 		util.preencheElemento(driver,numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
 		util.preencheElemento(driver,orgao, propDocumentos.getProperty("orgao"));
 		descricao.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id("cpOrgaoSelSpan")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("cpOrgaoSelSpan")));
 		util.preencheElemento(driver,observacaoOrgaoExterno, propDocumentos.getProperty("observacaoOrgaoExterno"));
 		util.preencheElemento(driver,subscritor, propDocumentos.getProperty("subscritorExterno"));
 		botaoOk.click();

@@ -20,9 +20,10 @@ public class PesquisaDocumentoPage {
 	public void buscarDocumento(String codigoDocumento) {		
 		System.out.println("Handle buscar: " + driver.getWindowHandle());
 		System.out.println("URL: " + driver.getCurrentUrl());
-		new WebDriverWait(driver, 15).until(ExpectedConditions.titleIs("SIGA - Lista de Expedientes"));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoBuscar));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Lista de Expedientes"));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.id("ultMovLotaRespSelSpan")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoBuscar));
 		botaoBuscar.click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[1]/a[not(contains(., '" +codigoDocumento+"'))]"))).click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[1]/a[not(contains(., '" +codigoDocumento+"'))]"))).click();
 	}
 }

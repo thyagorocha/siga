@@ -23,8 +23,8 @@ public class AgendamentoPublicacaoPage {
 	}
 	
 	public void visualizaPagina() {
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoOk));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoVisualizarPublicacao));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(botaoCancela)).click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoVisualizarPublicacao));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoCancela)).click();
 	}
 }

@@ -111,7 +111,7 @@ public class OperacoesDocumentoPage {
 	}
 		
 	public String getTextoVisualizacaoDocumento(String xpathElemento) {
-		WebElement element =  new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathElemento)));
+		WebElement element =  new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathElemento)));
 		System.out.println("Texto: " + element.getText());
 		return element.getText();
 	}
@@ -222,7 +222,7 @@ public class OperacoesDocumentoPage {
 	public void clicarLinkVisualizarImpressao() {
 		System.out.println("URL: " + driver.getCurrentUrl());
 		linkVisualizarImpressao.click();
-		new WebDriverWait(driver, 15).until(util.popupDisponivel());
+		new WebDriverWait(driver, 30).until(util.popupDisponivel());
 		String winHandleBefore = driver.getWindowHandle();
 		String popupHandle = (String) driver.getWindowHandles().toArray()[1];
 		
@@ -235,13 +235,13 @@ public class OperacoesDocumentoPage {
 		System.out.println("URL: " + driver.getCurrentUrl());
 
 		
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div[2]/div[4]/div/div/div[2]/div[1]")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div[2]/div[4]/div/div/div[2]/div[1]")));
 		driver.close();
 		driver.switchTo().window(winHandleBefore);
 	}
 	
 	public void clicarCancelarVia() {
-		WebElement element = new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//a[2][contains(text(),'Cancelar Via')])")));
+		WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//a[2][contains(text(),'Cancelar Via')])")));
 		element.click();
 		closeAlertAndGetItsText();
 	}
@@ -250,30 +250,30 @@ public class OperacoesDocumentoPage {
 		linkDuplicar.click();
 		closeAlertAndGetItsText();
 		String URL= driver.getCurrentUrl();
-		new WebDriverWait(driver, 15).until(util.trocaURL(URL));
+		new WebDriverWait(driver, 30).until(util.trocaURL(URL));
 	}	
 	
 	public void clicarLinkExcluir() {
 		linkExcluir.click();
 		closeAlertAndGetItsText();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.titleIs("SIGA - Página Inicial"));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Página Inicial"));
 	}	
 	
 	public void clicarLinkFinalizar() {
 		linkFinalizar.click();
 	    closeAlertAndGetItsText();
-	    new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOfElementLocated(By.linkText("Finalizar")));
+	    new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.linkText("Finalizar")));
 	}	
 	
 	public void efetuaBuscaDocumento(String codigoDocumento) {
 		buscaGenerica.clear();
 		buscaGenerica.sendKeys(codigoDocumento);
 		driver.findElement(By.linkText("/html/body/div[1]/div/div[1]/div/div[2]/img")).click();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Visualizar Impressão")));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Visualizar Impressão")));
 	}
 	
 	public void clicarAssinarCopia(String baseURL, String codigoDocumento) {		
-		new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Assinar/Conferir cópia"))).click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Assinar/Conferir cópia"))).click();
 		String codigoAnexo;
 		
 		util.openPopup(driver);
@@ -281,7 +281,7 @@ public class OperacoesDocumentoPage {
 		try {
 			String urlPopup = driver.getCurrentUrl();
 			System.out.println("URL: " + driver.getCurrentUrl());
-			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[2]/div/div/p[1]/b")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[2]/div/div/p[1]/b")));
 			codigoAnexo = urlPopup.substring(urlPopup.indexOf("id=")+3, urlPopup.indexOf("&"));
 			System.out.println("Código anexo: " + codigoAnexo);		
 		} finally {
@@ -293,9 +293,9 @@ public class OperacoesDocumentoPage {
 	}
 	
 	public void clicarAssinarDespacho(String baseURL, String codigoDocumento) {		
-/*		WebElement despacho = new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
+/*		WebElement despacho = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
 		despacho.findElement(By.linkText("Ver/Assinar")).click();*/
-		new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Ver/Assinar"))).click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Ver/Assinar"))).click();
 		String codigoDespacho;
 		
 		util.openPopup(driver);
@@ -303,7 +303,7 @@ public class OperacoesDocumentoPage {
 			String urlPopup = driver.getCurrentUrl();
 			System.out.println("URL: " + driver.getCurrentUrl());
 					
-			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(., 'DESPACHO N')]")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(., 'DESPACHO N')]")));
 			codigoDespacho = urlPopup.substring(urlPopup.indexOf("id=")+3, urlPopup.indexOf("&"));
 			System.out.println("Código anexo: " + codigoDespacho);
 
@@ -316,10 +316,10 @@ public class OperacoesDocumentoPage {
 	}
 	
 	public void clicarProtocolo() {	
-		new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Protocolo"))).click();		
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Protocolo"))).click();		
 		util.openPopup(driver);
 		try {	
-			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h2[contains(., 'Protocolo de Transferência')]")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h2[contains(., 'Protocolo de Transferência')]")));
 
 		} finally {
 			util.closePopup(driver);
@@ -329,7 +329,7 @@ public class OperacoesDocumentoPage {
 	}
 	
 	private String closeAlertAndGetItsText() {
-		new WebDriverWait(driver, 15).until(ExpectedConditions.alertIsPresent());
+		new WebDriverWait(driver, 30).until(ExpectedConditions.alertIsPresent());
 	    Alert alert = driver.switchTo().alert();
 		String alertText = alert.getText();
 		alert.accept();
