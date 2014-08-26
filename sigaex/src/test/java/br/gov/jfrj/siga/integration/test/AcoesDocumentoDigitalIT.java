@@ -48,6 +48,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 			PortariaPage portariaPage = PageFactory.initElements(driver, PortariaPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
 			portariaPage.criaPortaria(propDocumentos);
+			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
 														
 			System.out.println("Código do documento: " + codigoDocumento);
 		} catch (Exception e) {

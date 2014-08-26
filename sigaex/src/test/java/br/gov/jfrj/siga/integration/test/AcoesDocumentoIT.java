@@ -62,7 +62,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
 			oficioPage.criaOficio(propDocumentos);
-								
+			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
 			System.out.println("Código do documento: " + codigoDocumento);
 		} catch (Exception e) {
 			e.printStackTrace();

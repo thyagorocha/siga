@@ -18,10 +18,6 @@ public class IntegrationTestBase {
 	private String password;
 	private LoginPage loginPage;
 	
-/*	public IntegrationTestBase(WebDriver driver) {
-		this.driver = driver;
-	}*/
-
 	public IntegrationTestBase(String baseURL, String login, String password) {
 		this.baseURL = baseURL;
 		this.login = login;
@@ -30,6 +26,8 @@ public class IntegrationTestBase {
 
 	public void efetuaLogin() {
 		try {
+			//System.setProperty("webdriver.ie.driver", "src/test/resources/drivers/Win32/IEDriverServer.exe");
+			
 			driver = new InternetExplorerDriver();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			driver.manage().window().maximize();	

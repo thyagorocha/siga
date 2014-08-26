@@ -36,9 +36,11 @@ public class IntegrationTestUtil {
 		for (String handle : windowHandles) {
 			if(!handle.contains(winHandle)) {
 				driver.switchTo().window(handle); 	
+				System.out.println("Troquei de janela!");
+				break;
 			}
-		}
-
+		}		
+		
 		driver.manage().window().maximize();		
 		return driver;
 	}
