@@ -2,6 +2,8 @@ package br.gov.jfrj.siga.integration.test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -194,10 +196,15 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	@Test(enabled = true, priority = 4)
 	public void solicitarPublicacaoBoletim() {
 		operacoesDocumentoPage.clicarLinkSolicitarPublicacaoBoletim();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")));		
-		operacoesDocumentoPage.clicarLinkDesfazerSolicitacaoPublicacaoBoletim();
-		new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")));
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.linkText("Solicitar Publicação no Boletim")));
+		
+		if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 17) {
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[contains(., 'A solicitação de publicação no BIE apenas é permitida até as 17:00')]")));
+		} else {
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")));		
+			operacoesDocumentoPage.clicarLinkDesfazerSolicitacaoPublicacaoBoletim();
+			new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.linkText("Solicitar Publicação no Boletim")));		
+		}
 	}
 	
 	@Test(enabled = true, priority = 4)
