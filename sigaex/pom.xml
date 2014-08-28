@@ -94,16 +94,6 @@
 			<artifactId>selenium-java</artifactId>
 			<version>2.42.2</version>
 			<scope>test</scope>
-<!-- 			<exclusions>
-				<exclusion>
-					<groupId>xml-apis</groupId>
-					<artifactId>xml-apis</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.sourceforge.cssparser</groupId>
-					<artifactId>cssparser</artifactId>
-				</exclusion>
-			</exclusions> -->
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
