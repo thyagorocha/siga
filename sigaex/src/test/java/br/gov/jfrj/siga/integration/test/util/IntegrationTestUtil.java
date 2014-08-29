@@ -36,7 +36,7 @@ public class IntegrationTestUtil {
 		for (String handle : windowHandles) {
 			if(!handle.contains(winHandle)) {
 				driver.switchTo().window(handle); 	
-				System.out.println("Troquei de janela!");
+				System.out.println("Troca de controle para Popup!");
 				break;
 			}
 		}		

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="TestAll">
-	<test name="CriacaoDocumentos">
+	<test name="SigaDoc">
 	<parameter name="infoDocumentos" value="src/test/resources/InfoDocumentos.properties"/>
 	<parameter name="baseURL" value="http://localhost:8080"/>
-	<parameter name="login" value="RJ13286" />
-	<parameter name="password" value="Teste123" />
 		<classes>		
 			<class name="br.gov.jfrj.siga.integration.test.CriacaoDocumentoIT"/>
 			<class name="br.gov.jfrj.siga.integration.test.AcoesDocumentoIT"/>			

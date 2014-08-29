@@ -3,10 +3,8 @@ package br.gov.jfrj.siga.integration.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -30,9 +28,9 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 	private Properties propDocumentos = new Properties();
 	private String codigoDocumento;
 	
-	@Parameters({ "baseURL", "login", "password" })
-	public AcoesDocumentoDigitalIT(String baseURL, String login, String password) {
-		super(baseURL, login, password);
+	@Parameters({ "baseURL"})
+	public AcoesDocumentoDigitalIT(String baseURL) {
+		super(baseURL);
 	}
 	
 	@BeforeClass	
@@ -48,9 +46,6 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 			PortariaPage portariaPage = PageFactory.initElements(driver, PortariaPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
 			portariaPage.criaPortaria(propDocumentos);
-			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
-														
-			System.out.println("Código do documento: " + codigoDocumento);
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
@@ -63,8 +58,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 			System.out.println("BeforeMethod... Titulo página: " + driver.getTitle());
 			if(!driver.getCurrentUrl().contains("exibir.action")) {
 				System.out.println("Efetuando busca!");
-				driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);
-				//operacoesDocumentoPage.efetuaBuscaDocumento(codigoDocumento);					
+				driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);			
 			}
 			
 			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");

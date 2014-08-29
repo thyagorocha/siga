@@ -14,26 +14,19 @@ import br.gov.jfrj.siga.page.objects.LoginPage;
 public class IntegrationTestBase {
 	protected WebDriver driver;
 	protected String baseURL;
-	private String login;
-	private String password;
-	private LoginPage loginPage;
-	
-	public IntegrationTestBase(String baseURL, String login, String password) {
+
+	public IntegrationTestBase(String baseURL) {
 		this.baseURL = baseURL;
-		this.login = login;
-		this.password = password;
-		}
+	}
 
 	public void efetuaLogin() {
 		try {
-			//System.setProperty("webdriver.ie.driver", "src/test/resources/drivers/Win32/IEDriverServer.exe");
-			
 			driver = new InternetExplorerDriver();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			driver.manage().window().maximize();	
 			driver.get(baseURL + "/siga");
-			loginPage = PageFactory.initElements(driver, LoginPage.class);
-			loginPage.login(login, password);
+			driver.manage().window().maximize();
+			LoginPage loginPage = PageFactory.initElements(driver,	LoginPage.class);
+			loginPage.login(System.getProperty("userSiga"), System.getProperty("passSiga"));
 			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a.gt-btn-small.gt-btn-right")));
 		} catch (Exception e) {
 			e.printStackTrace();

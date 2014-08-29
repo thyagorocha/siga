@@ -25,9 +25,9 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	private OperacoesDocumentoPage operacoesDocumentoPage;
 	private Properties propDocumentos = new Properties();
 	
-	@Parameters({ "baseURL", "login", "password" })
-	public CriacaoDocumentoIT(String baseURL, String login, String password) {
-		super(baseURL, login, password);
+	@Parameters({ "baseURL"})
+	public CriacaoDocumentoIT(String baseURL) {
+		super(baseURL);
 	}
 
 	@BeforeClass	

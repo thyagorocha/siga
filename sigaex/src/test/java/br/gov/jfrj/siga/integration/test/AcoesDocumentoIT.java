@@ -43,10 +43,9 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	private Properties propDocumentos = new Properties();
 	private String codigoDocumento;
 	
-	@Parameters({ "baseURL", "login", "password" })
-	public AcoesDocumentoIT(String baseURL, String login, String password) {
-		super(baseURL, login, password);
-		// TODO Auto-generated constructor stub
+	@Parameters({ "baseURL"})
+	public AcoesDocumentoIT(String baseURL) {
+		super(baseURL);
 	}
 	
 	@BeforeClass	
@@ -62,8 +61,6 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
 			oficioPage.criaOficio(propDocumentos);
-			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
-			System.out.println("Código do documento: " + codigoDocumento);
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
@@ -282,7 +279,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	public void despachoDocumentoFilho() {
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
-		String codigoDocumentoJuntado = transferenciaPage.despachoDocumentoFilho(propDocumentos, codigoDocumento);
+		transferenciaPage.despachoDocumentoFilho(propDocumentos, codigoDocumento);
 		
 		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., 'Documento juntado:')]")));		
 	}
@@ -292,10 +289,6 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkVisualizarDossie();
 		VisualizacaoDossiePage visualizacaoDossiePage = PageFactory.initElements(driver, VisualizacaoDossiePage.class);
 		visualizacaoDossiePage.visualizarDossie();
-	}
-	
-	public void visualizarImpressao() {
-		operacoesDocumentoPage.clicarLinkVisualizarImpressao();		
 	}
 	
 	@AfterClass

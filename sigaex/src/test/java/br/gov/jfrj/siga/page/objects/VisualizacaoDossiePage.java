@@ -20,16 +20,13 @@ public class VisualizacaoDossiePage {
 	}
 	
 	public void visualizarDossie() {
-		List<WebElement> rows = documentosTable.findElements(By.cssSelector("tr"));		
+		List<WebElement> links = documentosTable.findElements(By.xpath("//a[contains(text(), '-DES-')]"));		
 		String windowHandle = driver.getWindowHandle();
-		WebElement element;
-		for (int i = 1; i < rows.size(); i++) {
-			element =  rows.get(i);
-			System.out.println("Texto: " + element.getText());
-			element.click();
-
+		
+		for (WebElement webElement : links) {
+			webElement.click();
 			new WebDriverWait(driver, 30).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("painel")));
-			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'Nº')]")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'DESPACHO Nº')]")));
 			driver.switchTo().window(windowHandle);
 		}
 	}
