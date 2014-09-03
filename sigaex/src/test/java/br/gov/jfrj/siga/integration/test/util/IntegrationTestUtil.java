@@ -1,8 +1,11 @@
 package br.gov.jfrj.siga.integration.test.util;
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -15,16 +18,30 @@ public class IntegrationTestUtil {
 	private String winHandle;
 	
 	public void preencheElemento(WebDriver driver, WebElement element, String valor) {
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element));
+		new WebDriverWait(driver, 30).ignoring(NoSuchElementException.class, StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(element));
 		element.click();
 		element.clear();
 		element.sendKeys(valor);
 	}
 	
 	public Select getSelect(WebDriver driver, WebElement element) {
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element));
+		new WebDriverWait(driver, 30).ignoring(NoSuchElementException.class, StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(element));
 		element.click();
 		return new Select(element);
+	}
+	
+	public WebElement getWebElement(WebDriver driver, By option) {
+		WebElement we = null; 
+		try {
+			we = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(option));	
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		return we;
+	}
+	
+	public Boolean isElementInvisible(WebDriver driver, By option) {
+		return new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(option));
 	}
 		
 	public WebDriver openPopup(WebDriver driver) {
