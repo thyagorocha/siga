@@ -3,15 +3,11 @@ package br.gov.jfrj.siga.integration.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -19,6 +15,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.AgendamentoPublicacaoPage;
 import br.gov.jfrj.siga.page.objects.AnexoPage;
 import br.gov.jfrj.siga.page.objects.AnotacaoPage;
@@ -42,10 +39,12 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	private OperacoesDocumentoPage operacoesDocumentoPage;
 	private Properties propDocumentos = new Properties();
 	private String codigoDocumento;
+	private IntegrationTestUtil util;
 	
 	@Parameters({ "baseURL"})
 	public AcoesDocumentoIT(String baseURL) {
 		super(baseURL);
+		util = new IntegrationTestUtil();
 	}
 	
 	@BeforeClass	
@@ -94,9 +93,10 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkIncluirCossignatario();
 		InclusaoCossignatarioPage inclusaoCossignatarioPage = PageFactory.initElements(driver, InclusaoCossignatarioPage.class);
 		inclusaoCossignatarioPage.incluiCossignatario(propDocumentos);
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/div/table/tbody/tr/td[4]/a/span").contains("Markenson"));
+		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/div/table/tbody/tr/td[4]/a/span").contains(propDocumentos.getProperty("nomeCossignatario")),
+				"Nome do cossignatário não encontrado!");
 		operacoesDocumentoPage.excluirCossignatario();		
-		Assert.assertTrue(new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("/html/body/div[4]/div/div/table/tbody/tr/td[4]/a/span"))));
+		Assert.assertTrue(util.isElementInvisible(driver, By.cssSelector("/html/body/div[4]/div/div/table/tbody/tr/td[4]/a/span")), "Nome do cossignatário continua aparecendo na tela!");
 	}
 	
 	@Test(enabled = true, priority = 2)
@@ -104,14 +104,14 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAnexarArquivo();
 		AnexoPage anexoPage = PageFactory.initElements(driver, AnexoPage.class);
 		anexoPage.anexarArquivo(propDocumentos);
-		Assert.assertTrue(new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("teste.pdf"))) != null);
+		Assert.assertNotNull(util.getWebElement(driver,By.linkText("teste.pdf")), "O nome do arquivo selecionado não apareceu na tela!");
 		anexoPage.clicarBotaovoltar();
 	}
 	
 	@Test(enabled = true, priority = 3)
 	public void assinarAnexo() {
 		operacoesDocumentoPage.clicarAssinarCopia(baseURL, codigoDocumento);	
-		Assert.assertTrue(new WebDriverWait(driver, 30).until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//td[7][contains(., 'Assinado por')]"), "Assinado por")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[7][contains(., 'Assinado por')]")), "O texto 'Assinado por' não foi encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 1)
@@ -126,8 +126,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkFazerAnotacao();
 		AnotacaoPage anotacaoPage = PageFactory.initElements(driver, AnotacaoPage.class);
 		anotacaoPage.fazerAnotacao(propDocumentos);
-		WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., 'Teste de anotação')]")));
-		System.out.println("Element text: " + element.getText());
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[7][contains(., 'Teste de anotação')]")), "Conteúdo da anotação não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 5)
@@ -136,9 +135,10 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		RedefineNivelAcessoPage redefineNivelAcessoPage = PageFactory.initElements(driver, RedefineNivelAcessoPage.class);
 		redefineNivelAcessoPage.redefineNivelAcesso(propDocumentos);
 		operacoesDocumentoPage.clicarLinkDesfazerRedefinicaoSigilo();
-		WebElement nivelAcesso = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[2][contains(., 'Nível de Acesso:')]")));
+		WebElement nivelAcesso = util.getWebElement(driver, By.xpath("//p[2][contains(., 'Nível de Acesso:')]"));
+		Assert.assertNotNull(nivelAcesso, "Nível de acesso não encontrado");
 		System.out.println("Nível de acesso: " + nivelAcesso.getText());
-		Assert.assertTrue(nivelAcesso.getText().contains("Público"), "Texto Público não encontrado!");
+		Assert.assertTrue(nivelAcesso.getText().contains("Público"), "Texto de nível de acesso 'Público' não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -146,23 +146,22 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDefinirPerfil();
 		DefinePerfilPage definePerfilPage = PageFactory.initElements(driver, DefinePerfilPage.class);
 		definePerfilPage.definirPerfil(propDocumentos);
-		WebElement definicaoPerfil = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., 'Interessado:')]")));
-		System.out.println(definicaoPerfil.getText());
-		Assert.assertTrue(definicaoPerfil.getText().contains(propDocumentos.getProperty("nomeResponsavel")), "Nome do usuário responsável não encontrado!");	
-		definicaoPerfil.findElement(By.linkText("Cancelar")).click();
+		WebElement interessado = util.getWebElement(driver, By.xpath("//td[7][contains(., 'Interessado:')]"));
+		Assert.assertNotNull(interessado, "Texto 'Interessado' não encontrado!");
+		System.out.println(interessado.getText());
+		Assert.assertTrue(interessado.getText().contains(propDocumentos.getProperty("nomeResponsavel")), "Nome do usuário responsável não encontrado!");	
+		interessado.findElement(By.linkText("Cancelar")).click();
 		
 		CancelamentoMovimentacaoPage cancelamentoMovimentacaoPage = PageFactory.initElements(driver, CancelamentoMovimentacaoPage.class);
 		cancelamentoMovimentacaoPage.cancelarMovimentacao(propDocumentos);
-		Assert.assertTrue(new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[7][contains(., 'Interessado:')]"))));
+		Assert.assertTrue(util.isElementInvisible(driver, By.xpath("//td[7][contains(., 'Interessado:')]")));
 	}
 	
 	@Test(enabled = true, priority = 2)
 	public void criarVia() {
 		operacoesDocumentoPage.clicarCriarVia();
 		operacoesDocumentoPage.clicarCancelarVia();
-		WebElement via = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//h3[contains(.,'Via - Cancelado')])"))); 
-		System.out.println("Via: " + via.getText());
-		Assert.assertTrue(via.getText().contains("Cancelado"), "Texto Cancelado não encontrado");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("(//h3[contains(.,'Via - Cancelado')])")), "Texto Cancelado não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -170,8 +169,8 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkRegistrarAssinaturaManual();
 		RegistraAssinaturaManualPage registraAssinaturaManualPage = PageFactory.initElements(driver, RegistraAssinaturaManualPage.class);
 		registraAssinaturaManualPage.registarAssinaturaManual();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));		
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Registro de Assinatura')]")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Registro de Assinatura')]")), "Texto 'Registro de Assinatura' não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -179,15 +178,15 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAssinarDigitalmente();
 		AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
 		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));		
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Assinatura')]")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Assinatura')]")), "Texto 'Assinatura' não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 4)
 	public void agendarPublicacao() {
 		operacoesDocumentoPage.clicarLinkAgendarPublicacao();
 		AgendamentoPublicacaoPage agendamentoPublicacaoPage = PageFactory.initElements(driver, AgendamentoPublicacaoPage.class);
-		agendamentoPublicacaoPage.visualizaPagina();
+		Assert.assertTrue(agendamentoPublicacaoPage.visualizaPagina(), "Não foi possível visualizar os botões da página de agendamento corretamente!");
 	}
 	
 	@Test(enabled = true, priority = 4)
@@ -195,22 +194,24 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkSolicitarPublicacaoBoletim();
 		
 		if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 17) {
-			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[contains(., 'A solicitação de publicação no BIE apenas é permitida até as 17:00')]")));
+			Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[contains(., 'A solicitação de publicação no BIE apenas é permitida até as 17:00')]")),
+					"Texto 'A solicitação de publicação no BIE apenas é permitida até as 17:00' não foi encontrado!");
 		} else {
-			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")));		
+			Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")), "Texto 'Solicitação de Publicação no Boletim' não foi encontrado!");		
 			operacoesDocumentoPage.clicarLinkDesfazerSolicitacaoPublicacaoBoletim();
-			new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")));
-			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.linkText("Solicitar Publicação no Boletim")));		
+			Assert.assertNotNull(util.isElementInvisible(driver, By.xpath("//td[2][contains(., 'Solicitação de Publicação no Boletim')]")), 
+					"Texto 'Solicitação de Publicação no Boletim' continua sendo exibido!");
+			Assert.assertNotNull(util.getWebElement(driver, By.linkText("Solicitar Publicação no Boletim")), "Texto Solicitar Publicação no Boletim não foi encontrado!");		
 		}
 	}
 	
 	@Test(enabled = true, priority = 4)
 	public void sobrestar() {
 		operacoesDocumentoPage.clicarLinkSobrestar();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Sobrestado')]")));	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Sobrestado')]")), "Texto 'Sobrestado' não encontrado!");	
 		operacoesDocumentoPage.clicarLinkDesobrestar();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));	
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Desobrestar')]")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Desobrestar')]")), "Texto 'Desobrestar' não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 4)
@@ -218,21 +219,22 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkVincular();
 		VinculacaoPage vinculacaoPage = PageFactory.initElements(driver, VinculacaoPage.class);
 		vinculacaoPage.vincularDocumento(propDocumentos, codigoDocumento);
-		WebElement vinculacao = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., 'Ver também:')]")));
+		WebElement vinculacao = util.getWebElement(driver, By.xpath("//td[7][contains(., 'Ver também:')]"));
+		Assert.assertNotNull(vinculacao, "Texto 'Ver também:' não encontrado");
 		System.out.println("Vinculação: " + vinculacao.getText());		
 		vinculacao.findElement(By.linkText("Cancelar")).click();
 
 		CancelamentoMovimentacaoPage cancelamentoMovimentacaoPage = PageFactory.initElements(driver, CancelamentoMovimentacaoPage.class);
 		cancelamentoMovimentacaoPage.cancelarMovimentacao(propDocumentos);
-		Assert.assertTrue(new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[7][contains(., 'Ver também:')]"))));
+		Assert.assertTrue(util.isElementInvisible(driver, By.xpath("//td[7][contains(., 'Ver também:')]")));
 	}
 	
 	@Test(enabled = true, priority = 4)
 	public void arquivarCorrente() {
 		operacoesDocumentoPage.clicarLinkArquivarCorrente();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Arquivamento Corrente')]")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Arquivamento Corrente')]")), "Texto Arquivamento Corrente não foi encontrado!");
 		operacoesDocumentoPage.clicarLinkDesfazerArquivamentoCorrente();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
 	}
 	
 	@Test(enabled = true, priority = 4)
@@ -240,14 +242,15 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkApensar();
 		ApensacaoPage apensacaoPage = PageFactory.initElements(driver, ApensacaoPage.class);
 		apensacaoPage.apensarDocumento(propDocumentos, codigoDocumento);
-		WebElement apensacao = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., 'Apensado ao documento')]")));
+		WebElement apensacao = util.getWebElement(driver, By.xpath("//td[7][contains(., 'Apensado ao documento')]"));
+		Assert.assertNotNull(apensacao, "Texto 'Apensado ao documento' não foi encontrado!");
 		System.out.println("Apensação: " + apensacao.getText());
 
 		operacoesDocumentoPage.clicarLinkDesapensar();
 		DesapensamentoPage desapensamentoPage = PageFactory.initElements(driver, DesapensamentoPage.class);
 		desapensamentoPage.desapensarDocumento(propDocumentos);
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));	
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., 'Desapensado do documento')]")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[7][contains(., 'Desapensado do documento')]")), "Texto 'Desapensado do documento' não foi encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 4)
@@ -255,13 +258,13 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
 		transferenciaPage.despacharDocumento(propDocumentos);
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")), "Texto do despacho não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 5)
 	public void assinarDespacho() {
 		operacoesDocumentoPage.clicarAssinarDespacho(baseURL, codigoDocumento);
-		new WebDriverWait(driver, 30).until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//td[7][contains(., 'Assinado por')]"), "Assinado por"));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[7][contains(., 'Assinado por')]")), "Texto 'Assinado por' não foi encontrado!");
 	}
 	  
 	@Test(enabled = true, priority = 4)
@@ -269,10 +272,10 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
 		transferenciaPage.transferirDocumento(propDocumentos);
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'A Receber (Físico)')]")));	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'A Receber (Físico)')]")), "Texto 'A Receber (Físico)' não foi encontrado!");	
 		
 		operacoesDocumentoPage.clicarProtocolo();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
 	}
 	
 	@Test(enabled = true, priority = 4)
@@ -280,15 +283,14 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
 		transferenciaPage.despachoDocumentoFilho(propDocumentos, codigoDocumento);
-		
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., 'Documento juntado:')]")));		
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[7][contains(., 'Documento juntado:')]")), "Texto 'Documento juntado:' não foi encontrado!");		
 	}
 	
 	@Test(enabled = true, priority = 4)
 	public void visualizarDossie() {
 		operacoesDocumentoPage.clicarLinkVisualizarDossie();
 		VisualizacaoDossiePage visualizacaoDossiePage = PageFactory.initElements(driver, VisualizacaoDossiePage.class);
-		visualizacaoDossiePage.visualizarDossie();
+		Assert.assertTrue(visualizacaoDossiePage.visualizarDossie(), "Texto 'DESPACHO Nº' não foi encontrado");
 	}
 	
 	@AfterClass

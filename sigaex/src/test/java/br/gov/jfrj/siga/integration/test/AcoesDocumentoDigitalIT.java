@@ -6,8 +6,6 @@ import java.util.Properties;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -15,6 +13,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.AnexoPage;
 import br.gov.jfrj.siga.page.objects.AssinaturaDigitalPage;
 import br.gov.jfrj.siga.page.objects.OperacoesDocumentoPage;
@@ -27,10 +26,12 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 	private OperacoesDocumentoPage operacoesDocumentoPage;
 	private Properties propDocumentos = new Properties();
 	private String codigoDocumento;
+	private IntegrationTestUtil util;
 	
 	@Parameters({ "baseURL"})
 	public AcoesDocumentoDigitalIT(String baseURL) {
 		super(baseURL);
+		util = new IntegrationTestUtil();
 	}
 	
 	@BeforeClass	
@@ -78,18 +79,20 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 	public void assinarDigitalmente() {
 		operacoesDocumentoPage.clicarLinkAssinarDigitalmente();
 		AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
-		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")));		
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[2][contains(., 'Assinatura')]")));
+		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto Aguardando Andamento não foi encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Assinatura')]")), "Linha de registro da assinatura não encontrada!");
 	}
 	
 	@Test(enabled = true, priority = 1)
 	public void anexarArquivo() {
 		operacoesDocumentoPage.clicarLinkAnexarArquivo();
 		AnexoPage anexoPage = PageFactory.initElements(driver, AnexoPage.class);
-		anexoPage.anexarArquivo(propDocumentos);
-		Assert.assertTrue(new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("teste.pdf"))) != null);
+		anexoPage.anexarArquivo(propDocumentos);	
+		Assert.assertNotNull(util.getWebElement(driver, By.linkText("teste.pdf")), "Nome do arquivo selecionado não encontrado na tela!");
 		anexoPage.clicarBotaovoltar();
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Anexo Pendente de Assinatura/Conferência')]")), 
+				"Texto Anexo Pendente de Assinatura/Conferência não foi encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -97,12 +100,12 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
 		transferenciaPage.despacharDocumento(propDocumentos);
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")),
+				"Texto " + propDocumentos.getProperty("despacho") + " não encontrado.");
 	}
 
 	@AfterClass
 	public void tearDown() throws Exception {
 		driver.quit();
 	}
-	
 }
