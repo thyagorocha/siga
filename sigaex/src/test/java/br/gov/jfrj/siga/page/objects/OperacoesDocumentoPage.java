@@ -2,6 +2,7 @@ package br.gov.jfrj.siga.page.objects;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -111,9 +112,15 @@ public class OperacoesDocumentoPage {
 	}
 		
 	public String getTextoVisualizacaoDocumento(String xpathElemento) {
-		WebElement element =  new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathElemento)));
-		System.out.println("Texto: " + element.getText());
-		return element.getText();
+		WebElement element = null;
+		try {
+			element =  new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathElemento)));
+			System.out.println("Texto: " + element.getText());
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		return (element != null ? element.getText() : "");
 	}
 
 	public void excluirCossignatario() {
@@ -295,7 +302,7 @@ public class OperacoesDocumentoPage {
 	public void clicarAssinarDespacho(String baseURL, String codigoDocumento) {		
 /*		WebElement despacho = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
 		despacho.findElement(By.linkText("Ver/Assinar")).click();*/
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Ver/Assinar"))).click();
+		util.getWebElement(driver, By.linkText("Ver/Assinar")).click();
 		String codigoDespacho;
 		
 		util.openPopup(driver);
@@ -303,7 +310,7 @@ public class OperacoesDocumentoPage {
 			String urlPopup = driver.getCurrentUrl();
 			System.out.println("URL: " + driver.getCurrentUrl());
 					
-			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(., 'DESPACHO N')]")));
+			util.getWebElement(driver, By.xpath("//p[contains(., 'DESPACHO N')]"));
 			codigoDespacho = urlPopup.substring(urlPopup.indexOf("id=")+3, urlPopup.indexOf("&"));
 			System.out.println("Código anexo: " + codigoDespacho);
 
@@ -316,10 +323,10 @@ public class OperacoesDocumentoPage {
 	}
 	
 	public void clicarProtocolo() {	
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Protocolo"))).click();		
+		util.getWebElement(driver, By.linkText("Protocolo")).click();		
 		util.openPopup(driver);
 		try {	
-			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h2[contains(., 'Protocolo de Transferência')]")));
+			util.getWebElement(driver, By.xpath("//h2[contains(., 'Protocolo de Transferência')]"));
 
 		} finally {
 			util.closePopup(driver);

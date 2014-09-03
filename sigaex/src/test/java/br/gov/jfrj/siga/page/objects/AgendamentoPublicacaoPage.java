@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.page.objects;
 
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -17,14 +18,20 @@ public class AgendamentoPublicacaoPage {
 	
 	@FindBy(linkText="Visualizar Publicação")
 	private WebElement botaoVisualizarPublicacao;
-	
+		
 	public AgendamentoPublicacaoPage(WebDriver driver) {
 		this.driver = driver;
 	}
 	
-	public void visualizaPagina() {
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoVisualizarPublicacao));
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoCancela)).click();
+	public Boolean visualizaPagina() {
+		try {
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoVisualizarPublicacao));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoCancela)).click();
+			return true;
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

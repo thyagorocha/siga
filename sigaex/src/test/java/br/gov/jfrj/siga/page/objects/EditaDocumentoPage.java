@@ -91,15 +91,15 @@ public class EditaDocumentoPage {
 		if(tipoDestinatario.equals("Matrícula")) {
 			util.preencheElemento(driver, driver.findElement(By.id("frm_destinatarioSel_sigla")), siglaDestinatario);			
 			descricao.click();
-			new WebDriverWait(driver, 20).until(ExpectedConditions.presenceOfElementLocated(By.id("destinatarioSelSpan")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.id("destinatarioSelSpan")));
 		} else if(tipoDestinatario.equals("Órgão Integrado")) {
 			util.preencheElemento(driver, driver.findElement(By.id("frm_lotacaoDestinatarioSel_sigla")), siglaDestinatario);			
 			descricao.click();
-			new WebDriverWait(driver, 20).until(ExpectedConditions.presenceOfElementLocated(By.id("lotacaoDestinatarioSelSpan")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.id("lotacaoDestinatarioSelSpan")));
 		} else if(tipoDestinatario.equals("Órgão Externo")) {
 			util.preencheElemento(driver, driver.findElement(By.id("frm_orgaoExternoDestinatarioSel_sigla")), siglaDestinatario);			
 			descricao.click();
-			new WebDriverWait(driver, 20).until(ExpectedConditions.presenceOfElementLocated(By.id("orgaoExternoDestinatarioSelSpan")));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.id("orgaoExternoDestinatarioSelSpan")));
 		} else if(tipoDestinatario.equals("Campo Livre")) {
 			util.preencheElemento(driver, driver.findElement(By.id("frm_nmDestinatario")), siglaDestinatario);			
 		}
