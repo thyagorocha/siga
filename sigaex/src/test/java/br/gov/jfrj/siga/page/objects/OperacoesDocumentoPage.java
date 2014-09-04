@@ -302,7 +302,7 @@ public class OperacoesDocumentoPage {
 	public void clicarAssinarDespacho(String baseURL, String codigoDocumento) {		
 /*		WebElement despacho = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
 		despacho.findElement(By.linkText("Ver/Assinar")).click();*/
-		util.getWebElement(driver, By.linkText("Ver/Assinar")).click();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Ver/Assinar"))).click();
 		String codigoDespacho;
 		
 		util.openPopup(driver);
@@ -310,7 +310,7 @@ public class OperacoesDocumentoPage {
 			String urlPopup = driver.getCurrentUrl();
 			System.out.println("URL: " + driver.getCurrentUrl());
 					
-			util.getWebElement(driver, By.xpath("//p[contains(., 'DESPACHO N')]"));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(., 'DESPACHO N')]")));
 			codigoDespacho = urlPopup.substring(urlPopup.indexOf("id=")+3, urlPopup.indexOf("&"));
 			System.out.println("Código anexo: " + codigoDespacho);
 
@@ -323,10 +323,10 @@ public class OperacoesDocumentoPage {
 	}
 	
 	public void clicarProtocolo() {	
-		util.getWebElement(driver, By.linkText("Protocolo")).click();		
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Protocolo"))).click();		
 		util.openPopup(driver);
 		try {	
-			util.getWebElement(driver, By.xpath("//h2[contains(., 'Protocolo de Transferência')]"));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h2[contains(., 'Protocolo de Transferência')]")));
 
 		} finally {
 			util.closePopup(driver);
