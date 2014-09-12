@@ -9,7 +9,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
@@ -123,16 +122,19 @@ public class EditaDocumentoPage {
 		util.preencheElemento(driver,descricao,  propDocumentos.getProperty("descricao"));	
 	}
 
-	public void preencheDocumentoInterno(Properties propDocumentos, String tipoDocumento, String modeloDocumento, String origemDocumento, Boolean isDigital) {
-		util.getSelect(driver,tipo).selectByVisibleText(tipoDocumento);
-		descricao.click();
-		util.getSelect(driver,modelo).selectByVisibleText(modeloDocumento);
-		descricao.click();	
+	public void preencheDocumentoInterno(Properties propDocumentos, String origemDocumento, Boolean isDigital) {
 		preencheDocumento(origemDocumento, isDigital, propDocumentos);
 		util.preencheElemento(driver,siglaSubscritor, propDocumentos.getProperty("siglaSubscritor"));
 		descricao.click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
 	}	
+	
+	public void selectTipoDocumento(String tipoDocumento, String modeloDocumento) {
+		util.getSelect(driver,tipo).selectByVisibleText(tipoDocumento);
+		descricao.click();
+		util.getSelect(driver,modelo).selectByVisibleText(modeloDocumento);
+		descricao.click();	
+	}
 	
 	public void preencheDocumentoInternoSemModelo(Properties propDocumentos, String tipoDocumento, String origemDocumento, Boolean isDigital) {
 		util.getSelect(driver,tipo).selectByVisibleText(tipoDocumento);
@@ -155,8 +157,9 @@ public class EditaDocumentoPage {
 		botaoOk.click();
 	}
 		
-	public void preencheDocumentoInternoImportado(Properties propDocumentos) {			
-		preencheDocumentoInterno(propDocumentos, "Memorando", "Memorando", propDocumentos.getProperty("internoImportado"), Boolean.TRUE);
+	public void preencheDocumentoInternoImportado(Properties propDocumentos) {	
+		selectTipoDocumento("Memorando", "Memorando");
+		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoImportado"), Boolean.TRUE);
 		util.preencheElemento(driver, numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
 		botaoOk.click();
 	}

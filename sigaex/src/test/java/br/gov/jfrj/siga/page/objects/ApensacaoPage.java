@@ -42,7 +42,8 @@ public class ApensacaoPage {
 		util = new IntegrationTestUtil();
 	}
 	
-	public void apensarDocumento(Properties propDocumentos, String codigoDocumento) {
+	public String apensarDocumento(Properties propDocumentos, String codigoDocumento) {
+		String codigoDocumentoApensado = "";
 		util.preencheElemento(driver, data, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver, responsavel, propDocumentos.getProperty("responsavel"));		
 		documentoMestre.click();
@@ -56,13 +57,14 @@ public class ApensacaoPage {
 		
 		try {
 			PesquisaDocumentoPage buscaPage = PageFactory.initElements(driver, PesquisaDocumentoPage.class);
-			buscaPage.buscarDocumento(codigoDocumento);		
+			codigoDocumentoApensado = buscaPage.buscarDocumento(codigoDocumento);		
 			System.out.println("WindowHandle size depois: " + driver.getWindowHandles().size());
 		} finally {
 			util.changeFromPopup(driver);
 		}
-
 		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Apensar Documento"));
 		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();		
+		
+		return codigoDocumentoApensado;
 	}
 }

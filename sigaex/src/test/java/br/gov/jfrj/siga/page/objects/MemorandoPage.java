@@ -10,13 +10,18 @@ public class MemorandoPage extends EditaDocumentoPage {
 	
 	@FindBy(id="scayt_0")
 	private WebElement frameMemorando;
+	
+	@FindBy(css="table.cke_editor")
+	private WebElement tableCkEditor;
 		
 	public MemorandoPage(WebDriver driver) {
 		super(driver);
 	}
 	
 	public void criaMemorando(Properties propDocumentos) {
-		preencheDocumentoInterno(propDocumentos, "Memorando", "Memorando", propDocumentos.getProperty("internoProduzido"), Boolean.TRUE);	
+		selectTipoDocumento("Memorando", "Memorando");
+		util.isElementVisible(driver, tableCkEditor);
+		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoProduzido"), Boolean.TRUE);	
 		botaoOk.click();
 	}
 /*	public void criaMemorando() {	

@@ -100,6 +100,15 @@ public class OperacoesDocumentoPage {
 	
 	@FindBy(linkText="Visualizar Impressão")
 	private WebElement linkVisualizarImpressao;
+	
+	@FindBy(linkText="Desfazer Definição de Perfil")
+	private WebElement linkDesfazerDefinicaoPerfil;
+	
+	@FindBy(linkText="Exibir Informações Completas")
+	private WebElement linkExibirInformacoesCompletas;
+	
+	@FindBy(linkText="Cancelar Via")
+	private WebElement linkCancelarVia;
 			
 	@FindBy(id="buscar_genericoSel_sigla")
 	private WebElement buscaGenerica;
@@ -226,6 +235,20 @@ public class OperacoesDocumentoPage {
 		linkVisualizarDossie.click();
 	}
 	
+	public void clicarLinkExibirInformacoesCompletas() {
+		linkExibirInformacoesCompletas.click();
+	}
+	
+	public void clicarLinkDesfazerDefinicaoPerfil() {
+		linkDesfazerDefinicaoPerfil.click();
+		closeAlertAndGetItsText();
+	}
+	
+	public void clicarLinkDesfazerTransferencia() {
+		linkDesfazerTransferencia.click();
+		closeAlertAndGetItsText();		
+	}
+	
 	public void clicarLinkVisualizarImpressao() {
 		System.out.println("URL: " + driver.getCurrentUrl());
 		linkVisualizarImpressao.click();
@@ -248,8 +271,8 @@ public class OperacoesDocumentoPage {
 	}
 	
 	public void clicarCancelarVia() {
-		WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//a[2][contains(text(),'Cancelar Via')])")));
-		element.click();
+		//WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//a[2][contains(text(),'Cancelar Via')])")));
+		linkCancelarVia.click();
 		closeAlertAndGetItsText();
 	}
 		
@@ -331,8 +354,6 @@ public class OperacoesDocumentoPage {
 		} finally {
 			util.closePopup(driver);
 		}
-		linkDesfazerTransferencia.click();
-		closeAlertAndGetItsText();		
 	}
 	
 	private String closeAlertAndGetItsText() {

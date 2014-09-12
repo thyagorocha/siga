@@ -42,7 +42,8 @@ public class VinculacaoPage {
 		util = new IntegrationTestUtil();
 	}
 	
-	public void vincularDocumento(Properties propDocumentos, String codigoDocumento) {
+	public String vincularDocumento(Properties propDocumentos, String codigoDocumento) {
+		String codigoDocumentoVinculado = null;
 		util.preencheElemento(driver, data, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver, responsavel, propDocumentos.getProperty("responsavel"));
 		documento.click();
@@ -55,13 +56,15 @@ public class VinculacaoPage {
 		util.openPopup(driver);
 		try {
 			PesquisaDocumentoPage buscaPage = PageFactory.initElements(driver, PesquisaDocumentoPage.class);
-			buscaPage.buscarDocumento(codigoDocumento);		
+			codigoDocumentoVinculado =  buscaPage.buscarDocumento(codigoDocumento);		
 			System.out.println("WindowHandle size depois: " + driver.getWindowHandles().size());
 		} finally {
 			util.changeFromPopup(driver);
 		}
 
 		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Referência"));
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();		
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();	
+		
+		return codigoDocumentoVinculado;
 	}
 }

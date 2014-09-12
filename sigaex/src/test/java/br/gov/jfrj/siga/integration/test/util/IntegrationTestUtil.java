@@ -18,15 +18,13 @@ public class IntegrationTestUtil {
 	private String winHandle;
 	
 	public void preencheElemento(WebDriver driver, WebElement element, String valor) {
-		new WebDriverWait(driver, 30).ignoring(NoSuchElementException.class, StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(element));
-		element.click();
+		new WebDriverWait(driver, 30).ignoring(NoSuchElementException.class, StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(element)).click();
 		element.clear();
 		element.sendKeys(valor);
 	}
 	
 	public Select getSelect(WebDriver driver, WebElement element) {
-		new WebDriverWait(driver, 30).ignoring(NoSuchElementException.class, StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(element));
-		element.click();
+		new WebDriverWait(driver, 30).ignoring(NoSuchElementException.class, StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(element)).click();
 		return new Select(element);
 	}
 	
@@ -40,8 +38,22 @@ public class IntegrationTestUtil {
 		return we;
 	}
 	
+	public WebElement getWebElement(WebDriver driver, WebElement element, By option) {
+		WebElement we = null; 
+		try {
+			we = new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOf(element.findElement(option)));
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		return we;
+	}
+	
 	public Boolean isElementInvisible(WebDriver driver, By option) {
 		return new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(option));
+	}
+	
+	public WebElement isElementVisible(WebDriver driver, WebElement element) {
+		return new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOf(element));
 	}
 		
 	public WebDriver openPopup(WebDriver driver) {

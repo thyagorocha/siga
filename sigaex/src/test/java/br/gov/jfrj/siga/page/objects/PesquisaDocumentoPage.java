@@ -10,6 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class PesquisaDocumentoPage {
 	private WebDriver driver;
 	
+	@FindBy(id="descrDocumento")
+	private WebElement descricao;
+	
 	@FindBy(xpath="//input[@value='Buscar']")
 	private WebElement botaoBuscar;
 	
@@ -17,13 +20,18 @@ public class PesquisaDocumentoPage {
 		this.driver = driver;
 	}
 	
-	public void buscarDocumento(String codigoDocumento) {		
+	public String buscarDocumento(String codigoDocumento) {		
 		System.out.println("Handle buscar: " + driver.getWindowHandle());
 		System.out.println("URL: " + driver.getCurrentUrl());
 		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Lista de Expedientes"));
 		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.id("ultMovLotaRespSelSpan")));
 		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoBuscar));
+		descricao.click();
 		botaoBuscar.click();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[1]/a[not(contains(., '" +codigoDocumento+"'))]"))).click();
+		WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[1]/a[not(contains(., '" +codigoDocumento+"'))]")));
+		String codigoDocumentoApensado = element.getText();
+		element.click();
+		
+		return codigoDocumentoApensado;
 	}
 }

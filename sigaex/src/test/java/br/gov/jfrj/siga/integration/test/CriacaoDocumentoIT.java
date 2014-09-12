@@ -1,9 +1,11 @@
 package br.gov.jfrj.siga.integration.test;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -12,6 +14,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.EditaDocumentoPage;
 import br.gov.jfrj.siga.page.objects.MemorandoPage;
 import br.gov.jfrj.siga.page.objects.OficioPage;
@@ -23,20 +26,18 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	private PrincipalPage principalPage;
 	private EditaDocumentoPage editaDocumentoPage;
 	private OperacoesDocumentoPage operacoesDocumentoPage;
-	private Properties propDocumentos = new Properties();
+	private IntegrationTestUtil util;
 	
-	@Parameters({ "baseURL"})
-	public CriacaoDocumentoIT(String baseURL) {
-		super(baseURL);
+	public CriacaoDocumentoIT() throws FileNotFoundException, IOException {
+		super();
+		util = new IntegrationTestUtil();
 	}
 
 	@BeforeClass	
 	@Parameters("infoDocumentos")
 	public void setUp(String infoDocumentos) {
-		File file = new File(infoDocumentos);
 		try {
 			efetuaLogin();
-			propDocumentos.load(new FileInputStream(file));
 			principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			editaDocumentoPage = PageFactory.initElements(driver, EditaDocumentoPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
@@ -62,8 +63,8 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	public void criaDocumentoExterno() {
 		principalPage.clicarBotaoNovoDocumentoEx();
 		editaDocumentoPage.preencheDocumentoExterno(propDocumentos);
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/table[1]/tbody/tr[3]/td/table/tbody/tr/td[1]/p")
-				.contains("Expediente Externo Nº TMP"), "Texto Expediente Externo Nº TMP não foi encontrado!");
+		WebElement divVisualizacaoDocumento = util.getWebElement(driver, By.cssSelector("div.gt-content-box"));		
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., 'EXPEDIENTE EXTERNO Nº')]")), "Texto Expediente Externo Nº TMP não foi encontrado!");
 		operacoesDocumentoPage.clicarLinkEditar();
 	}
 
@@ -71,8 +72,8 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	public void criaDocumentoInternoImportado() {
 		principalPage.clicarBotaoNovoDocumentoEx();
 		editaDocumentoPage.preencheDocumentoInternoImportado(propDocumentos);
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/table[2]/tbody/tr/td[1]/b")
-				.contains("Expediente Interno Nº TMP"), "Texto Expediente Interno Nº TMP não foi encontrado!");
+		WebElement divVisualizacaoDocumento = util.getWebElement(driver, By.cssSelector("div.gt-content-box"));
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//b[contains(., 'Expediente Interno Nº TMP')]")), "Texto Expediente Interno Nº TMP não foi encontrado!");
 	}
 	
 	@Test(enabled = true)
@@ -80,10 +81,9 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 		MemorandoPage memorandoPage = PageFactory.initElements(driver, MemorandoPage.class);
 		principalPage.clicarBotaoNovoDocumentoEx();
 		memorandoPage.criaMemorando(propDocumentos);
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/span/table/tbody/tr[1]/td/p")
-				.contains("MEMORANDO Nº TMP"), "Texto MEMORANDO Nº TMP não foi encontrado!");
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/span/span/p[1]")
-				.contains("Atenciosamente"), "Fecho não encontrado");
+		WebElement divVisualizacaoDocumento = util.getWebElement(driver, By.cssSelector("div.gt-content-box"));
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., 'MEMORANDO Nº TMP')]")), "Texto MEMORANDO Nº TMP não foi encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., 'Atenciosamente')]")), "Fecho não encontrado");
 	}
 	
 	@Test(enabled = true)
@@ -91,12 +91,10 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 		PortariaPage portariaPage = PageFactory.initElements(driver, PortariaPage.class);
 		principalPage.clicarBotaoNovoDocumentoEx();
 		portariaPage.criaPortaria(propDocumentos);
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/span/table[1]/tbody/tr/td/p")
-				.contains("PORTARIA Nº TMP"), "Texto PORTARIA Nº TMP não foi encontrado!");
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/span/table[2]/tbody/tr/td[2]/p")
-				.contains("Testes de Integração"), "Informação sobre o que Dispõe o documento não encontrada!");
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/span/div/p[1]/span")
-				.contains("Exmo. Sr. Juiz Federal"), "Texto do memorando não encontrado!");
+		WebElement divVisualizacaoDocumento = util.getWebElement(driver, By.cssSelector("div.gt-content-box"));
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., 'PORTARIA Nº TMP')]")), "Texto PORTARIA Nº TMP não foi encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., 'Testes de Integração')]")), "Informação sobre o que Dispõe o documento não encontrada!");
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//span[contains(., 'Exmo. Sr. Juiz Federal')]")), "Texto do memorando não encontrado!");		
 	}
 	
 	@Test(enabled = true)
@@ -104,12 +102,11 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 		OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
 		principalPage.clicarBotaoNovoDocumentoEx();
 		oficioPage.criaOficio(propDocumentos);
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/span/table[1]/tbody/tr[1]/td/p")
-				.contains("OFÍCIO Nº TMP"), "Texto OFÍCIO Nº TMP não foi encontrado!");
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("//table/tbody/tr/td/span/p[contains(.,'"+ propDocumentos.getProperty("enderecoDestinatario") + "')]")
-				.contains("Rio de Janeiro"), "Endereço não encontrado!");
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[5]/div[1]/div/table/tbody/tr/td/span/div/p[2]")
-				.contains("Senhora Juiza"), "Forma de Tratamento não encontrada!");
+		WebElement divVisualizacaoDocumento = util.getWebElement(driver, By.cssSelector("div.gt-content-box"));
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., 'OFÍCIO Nº TMP')]")), "Texto OFÍCIO Nº TMP não foi encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., '" + propDocumentos.getProperty("enderecoDestinatario") + "')]")), 
+				"Endereço não encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, divVisualizacaoDocumento, By.xpath("//p[contains(., 'Senhora Juiza')]")), "Forma de Tratamento não encontrada!");
 	}
 	
 	@AfterClass

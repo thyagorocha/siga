@@ -1,5 +1,10 @@
 package br.gov.jfrj.siga.integration.test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -14,9 +19,12 @@ import br.gov.jfrj.siga.page.objects.LoginPage;
 public class IntegrationTestBase {
 	protected WebDriver driver;
 	protected String baseURL;
+	protected Properties propDocumentos = new Properties();
 
-	public IntegrationTestBase(String baseURL) {
-		this.baseURL = baseURL;
+	public IntegrationTestBase() throws FileNotFoundException, IOException {
+		this.baseURL = System.getProperty("baseURL");
+		File file = new File(System.getProperty("infoDocumentos"));
+		propDocumentos.load(new FileInputStream(file));
 	}
 
 	public void efetuaLogin() {
