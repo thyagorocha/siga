@@ -240,7 +240,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		Assert.assertTrue(documentosRelationados.getText().contains(documentoApensado), "Código do documento vinculado não foi encontrado!");
 				
 		operacoesDocumentoPage.clicarLinkExibirInformacoesCompletas();
-		WebElement vinculacao = util.getWebElement(driver, By.xpath("//td[9][contains(., 'Ver também:')]"));
+		WebElement vinculacao = util.getWebElement(driver, By.xpath("//td[7][contains(., 'Ver também:')]"));
 		Assert.assertNotNull(vinculacao, "Texto 'Ver também:' não encontrado");
 		vinculacao.findElement(By.linkText("Cancelar")).click();
 
