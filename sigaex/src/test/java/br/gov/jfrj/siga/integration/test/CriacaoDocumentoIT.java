@@ -2,6 +2,7 @@ package br.gov.jfrj.siga.integration.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -47,9 +48,9 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	}
 	
 	@BeforeMethod
-	public void paginaInicial() {
+	public void paginaInicial(Method method) {
 		try {
-			System.out.println("BeforeMethod... Titulo página: " + driver.getTitle());
+			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
 			if(!driver.getTitle().equals("SIGA - Página Inicial")) {
 				driver.get(baseURL + "/siga");
 			}
@@ -110,6 +111,7 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	
 	@AfterClass
 	public void tearDown() throws Exception {
+		efetuaLogout();
 		driver.quit();
 	}
 }

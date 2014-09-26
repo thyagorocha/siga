@@ -60,7 +60,7 @@ public class ApensacaoPage {
 			codigoDocumentoApensado = buscaPage.buscarDocumento(codigoDocumento);		
 			System.out.println("WindowHandle size depois: " + driver.getWindowHandles().size());
 		} finally {
-			util.changeFromPopup(driver);
+			util.closePopup(driver);
 		}
 		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Apensar Documento"));
 		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk)).click();		

@@ -32,7 +32,7 @@ public class InclusaoCossignatarioPage {
 	
 	public void incluiCossignatario(Properties propDocumento) {
 		cossignatario.clear();
-		util.preencheElemento(driver, cossignatario, propDocumento.getProperty("siglaDestinatario"));
+		util.preencheElemento(driver, cossignatario, propDocumento.getProperty("siglaCossignatario"));
 		funcaoLocalidade.click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("cosignatarioSelSpan")));
 		funcaoLocalidade.clear();

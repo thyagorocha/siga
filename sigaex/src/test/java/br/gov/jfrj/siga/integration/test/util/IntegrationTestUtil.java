@@ -49,11 +49,27 @@ public class IntegrationTestUtil {
 	}
 	
 	public Boolean isElementInvisible(WebDriver driver, By option) {
-		return new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(option));
+		Boolean invisible = Boolean.FALSE;
+		
+		try {
+			invisible = new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(option));
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		
+		return invisible;
 	}
 	
 	public WebElement isElementVisible(WebDriver driver, WebElement element) {
-		return new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOf(element));
+		WebElement we = null; 
+
+		try {
+			we = new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOf(element));
+		} catch(TimeoutException e) {
+			e.printStackTrace();
+		}
+		
+		return we;
 	}
 		
 	public WebDriver openPopup(WebDriver driver) {
@@ -74,18 +90,19 @@ public class IntegrationTestUtil {
 		return driver;
 	}
 	
-	public void closePopup(WebDriver driver) {
-		if(!winHandle.equals(driver.getWindowHandle())) {
-			driver.close();
-			changeFromPopup(driver);
-		}
-	}
-	
-	public WebDriver changeFromPopup(WebDriver driver) {
+	public void closePopup(WebDriver driver) {	
+		if(driver.getWindowHandles().size() > 1) {
+			Set<String> windowHandles = driver.getWindowHandles();
+			for (String handle : windowHandles) {
+				if(!handle.contains(winHandle)) {
+					driver.switchTo().window(handle); 	
+					driver.close();
+				}
+			}
+		}			
 		driver.switchTo().window(winHandle);
-		return driver;
 	}
-	
+
 	  public ExpectedCondition<Boolean> trocaURL(final String URL) {
 		    return new ExpectedCondition<Boolean>() {
 		      @Override

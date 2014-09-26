@@ -2,6 +2,7 @@ package br.gov.jfrj.siga.integration.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
@@ -47,9 +48,9 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 	}
 	
 	@BeforeMethod
-	public void paginaInicial() {
+	public void paginaInicial(Method method) {
 		try {
-			System.out.println("BeforeMethod... Titulo página: " + driver.getTitle());
+			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
 			if(!driver.getCurrentUrl().contains("exibir.action")) {
 				System.out.println("Efetuando busca!");
 				driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);			
@@ -82,7 +83,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAnexarArquivo();
 		AnexoPage anexoPage = PageFactory.initElements(driver, AnexoPage.class);
 		anexoPage.anexarArquivo(propDocumentos);	
-		Assert.assertNotNull(util.getWebElement(driver, By.linkText("teste.pdf")), "Nome do arquivo selecionado não encontrado na tela!");
+		Assert.assertNotNull(util.getWebElement(driver, By.linkText(propDocumentos.getProperty("arquivoAnexo").toLowerCase())), "Nome do arquivo selecionado não encontrado na tela!");
 		anexoPage.clicarBotaovoltar();
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Anexo Pendente de Assinatura/Conferência')]")), 
 				"Texto Anexo Pendente de Assinatura/Conferência não foi encontrado!");
@@ -99,6 +100,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 
 	@AfterClass
 	public void tearDown() throws Exception {
+		efetuaLogout();
 		driver.quit();
 	}
 }

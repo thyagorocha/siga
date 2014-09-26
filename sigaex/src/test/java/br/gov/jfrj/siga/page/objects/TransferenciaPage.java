@@ -71,7 +71,7 @@ public class TransferenciaPage {
 			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
 			botaoOk.click();
 		} finally {
-			util.changeFromPopup(driver);
+			util.closePopup(driver);
 		}
 	}
 	
@@ -80,11 +80,13 @@ public class TransferenciaPage {
 		
 		try {
 			util.getSelect(driver, tipoAtendente).selectByVisibleText(propDocumentos.getProperty("tipoAtendente"));
-			util.preencheElemento(driver, atendente, propDocumentos.getProperty("atendente"));
+			util.preencheElemento(driver, atendente, propDocumentos.getProperty("atendente"));			
+			funcaoLotacao.click();
+			new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("lotaResponsavelSelSpan")));			
 			util.preencheElemento(driver, dataDevolucao, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 			botaoOk.click();
 		} finally {
-			util.changeFromPopup(driver);
+			util.closePopup(driver);
 		}
 	}
 	

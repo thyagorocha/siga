@@ -2,6 +2,7 @@ package br.gov.jfrj.siga.integration.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.List;
 
@@ -34,7 +35,6 @@ import br.gov.jfrj.siga.page.objects.VinculacaoPage;
 import br.gov.jfrj.siga.page.objects.VisualizacaoDossiePage;
 
 public class AcoesDocumentoIT extends IntegrationTestBase {
-	private PrincipalPage principalPage;
 	private OperacoesDocumentoPage operacoesDocumentoPage;
 	private String codigoDocumento;
 	private IntegrationTestUtil util;
@@ -48,13 +48,12 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	public void setUp() {
 		try {
 			efetuaLogin();
-			principalPage = PageFactory.initElements(driver, PrincipalPage.class);
+			PrincipalPage principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
 			
 			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
-			oficioPage.criaOficio(propDocumentos);
-			
+			oficioPage.criaOficio(propDocumentos);							
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
@@ -62,9 +61,9 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	}
 	
 	@BeforeMethod
-	public void paginaInicial() {
+	public void paginaInicial(Method method) {
 		try {
-			System.out.println("BeforeMethod... Titulo página: " + driver.getTitle());
+			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
 			if(!driver.getCurrentUrl().contains("exibir.action")) {
 				System.out.println("Efetuando busca!");
 				driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);				
@@ -99,7 +98,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAnexarArquivo();
 		AnexoPage anexoPage = PageFactory.initElements(driver, AnexoPage.class);
 		anexoPage.anexarArquivo(propDocumentos);
-		Assert.assertNotNull(util.getWebElement(driver,By.linkText("teste.pdf")), "O nome do arquivo selecionado não apareceu na tela!");
+		Assert.assertNotNull(util.getWebElement(driver,By.linkText(propDocumentos.getProperty("arquivoAnexo").toLowerCase())), "O nome do arquivo selecionado não apareceu na tela!");
 		anexoPage.clicarBotaovoltar();
 	}
 	
@@ -121,7 +120,12 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkFazerAnotacao();
 		AnotacaoPage anotacaoPage = PageFactory.initElements(driver, AnotacaoPage.class);
 		anotacaoPage.fazerAnotacao(propDocumentos);
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[4][contains(., 'Teste de anotação')]")), "Conteúdo da anotação não encontrado!");
+		WebElement descricaoAnotacao = util.getWebElement(driver, By.xpath("//td[4][contains(., 'Teste de anotação')]"));
+		Assert.assertNotNull(descricaoAnotacao, "Conteúdo da anotação não encontrado!");
+		WebElement linkExcluir = util.getWebElement(driver, descricaoAnotacao, By.linkText("Excluir"));
+		Assert.assertNotNull(linkExcluir, "Link para exclusão da anotação não encontrado!");
+		linkExcluir.click();
+		Assert.assertTrue(util.isElementInvisible(driver, By.xpath("//td[4][contains(., 'Teste de anotação')]")), "Anotação continua sendo exibida");
 	}
 	
 	@Test(enabled = true, priority = 5)
@@ -129,10 +133,9 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkRedefinirNivelAcesso();
 		RedefineNivelAcessoPage redefineNivelAcessoPage = PageFactory.initElements(driver, RedefineNivelAcessoPage.class);
 		redefineNivelAcessoPage.redefineNivelAcesso(propDocumentos);
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("(//p/b[contains(.,'" + propDocumentos.getProperty("nivelAcesso") + "')])")), "Nível de acesso não foi modificado para público");
-		
-		operacoesDocumentoPage.clicarLinkDesfazerRedefinicaoSigilo();		
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("(//p/b[contains(.,'Público')])")), "Nível de acesso não foi modificado para público");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("(//p/b[contains(.,'" + propDocumentos.getProperty("nivelAcesso") + "')])")), "Nível de acesso não foi modificado para público");		
+/*		operacoesDocumentoPage.clicarLinkDesfazerRedefinicaoSigilo();		
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("(//p/b[contains(.,'Público')])")), "Nível de acesso não foi modificado para público");*/
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -181,7 +184,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	}
 	
 	@Test(enabled = true, priority = 3)
-	public void registarAssinaturaManual() {
+	public void registrarAssinaturaManual() {
 		operacoesDocumentoPage.clicarLinkRegistrarAssinaturaManual();
 		RegistraAssinaturaManualPage registraAssinaturaManualPage = PageFactory.initElements(driver, RegistraAssinaturaManualPage.class);
 		registraAssinaturaManualPage.registarAssinaturaManual();
@@ -294,7 +297,8 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		transferenciaPage.transferirDocumento(propDocumentos);
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'A Receber (Físico)')]")), "Texto 'A Receber (Físico)' não foi encontrado!");	
 		
-		//operacoesDocumentoPage.clicarProtocolo();
+		operacoesDocumentoPage.clicarLinkExibirInformacoesCompletas();
+		operacoesDocumentoPage.clicarProtocolo();
 		operacoesDocumentoPage.clicarLinkDesfazerTransferencia();
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
 	}
@@ -319,6 +323,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	
 	@AfterClass
 	public void tearDown() throws Exception {
+		efetuaLogout();
 		driver.quit();
 	}
 }

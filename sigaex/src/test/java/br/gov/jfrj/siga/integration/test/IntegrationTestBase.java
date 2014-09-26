@@ -9,11 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
+import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.LoginPage;
 
 public class IntegrationTestBase {
@@ -35,10 +35,16 @@ public class IntegrationTestBase {
 			driver.manage().window().maximize();
 			LoginPage loginPage = PageFactory.initElements(driver,	LoginPage.class);
 			loginPage.login(System.getProperty("userSiga"), System.getProperty("passSiga"));
-			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a.gt-btn-small.gt-btn-right")));
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
 		}
+	}
+	
+	public void efetuaLogout() {
+		IntegrationTestUtil util = new IntegrationTestUtil();
+		WebElement linkSair = util.getWebElement(driver, By.linkText("sair"));
+		linkSair.click();
+		util.getWebElement(driver, By.id("j_username"));
 	}
 }

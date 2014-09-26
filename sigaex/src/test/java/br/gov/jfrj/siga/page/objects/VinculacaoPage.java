@@ -59,7 +59,7 @@ public class VinculacaoPage {
 			codigoDocumentoVinculado =  buscaPage.buscarDocumento(codigoDocumento);		
 			System.out.println("WindowHandle size depois: " + driver.getWindowHandles().size());
 		} finally {
-			util.changeFromPopup(driver);
+			util.closePopup(driver);
 		}
 
 		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Referência"));
