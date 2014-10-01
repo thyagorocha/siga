@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 
 public class OperacoesDocumentoPage {
+	public static final String XPATH_STATUS_DOCUMENTO = "//h3[1]";
+	
 	protected WebDriver driver;	
 		
 	@FindBy(linkText="Anexar Arquivo")

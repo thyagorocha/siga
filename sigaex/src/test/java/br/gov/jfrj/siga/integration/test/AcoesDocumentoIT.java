@@ -51,8 +51,8 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 			PrincipalPage principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
 			
-			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
+			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
 			oficioPage.criaOficio(propDocumentos);							
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,11 +184,11 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	}
 	
 	@Test(enabled = true, priority = 3)
-	public void registrarAssinaturaManual() {
+	public void registrarAssinaturaManual() {		
 		operacoesDocumentoPage.clicarLinkRegistrarAssinaturaManual();
 		RegistraAssinaturaManualPage registraAssinaturaManualPage = PageFactory.initElements(driver, RegistraAssinaturaManualPage.class);
 		registraAssinaturaManualPage.registarAssinaturaManual();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
 		//Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Registro de Assinatura')]")), "Texto 'Registro de Assinatura' não encontrado!");
 	}
 	
@@ -197,7 +197,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAssinarDigitalmente();
 		AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
 		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
 		//Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Assinatura')]")), "Texto 'Assinatura' não encontrado!");
 	}
 	
@@ -227,9 +227,9 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	@Test(enabled = true, priority = 4)
 	public void sobrestar() {
 		operacoesDocumentoPage.clicarLinkSobrestar();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Sobrestado')]")), "Texto 'Sobrestado' não encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Sobrestado')]")), "Texto 'Sobrestado' não encontrado!");	
 		operacoesDocumentoPage.clicarLinkDesobrestar();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");	
 		//Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Desobrestar')]")), "Texto 'Desobrestar' não encontrado!");
 	}
 	
@@ -255,9 +255,9 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	@Test(enabled = true, priority = 4)
 	public void arquivarCorrente() {
 		operacoesDocumentoPage.clicarLinkArquivarCorrente();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(., 'Arquivado Corrente')]")), "Texto Arquivado Corrente não foi encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(., 'Arquivado Corrente')]")), "Texto Arquivado Corrente não foi encontrado!");
 		operacoesDocumentoPage.clicarLinkDesfazerArquivamentoCorrente();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
 	}
 	
 	@Test(enabled = true, priority = 4)
@@ -272,7 +272,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDesapensar();
 		DesapensamentoPage desapensamentoPage = PageFactory.initElements(driver, DesapensamentoPage.class);
 		desapensamentoPage.desapensarDocumento(propDocumentos);
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
 		Assert.assertTrue(util.isElementInvisible(driver, By.id("outputRelacaoDocs")), "Área de Documentos Relacionados ainda está visível!");
 	}
 	
@@ -295,12 +295,12 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
 		transferenciaPage.transferirDocumento(propDocumentos);
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'A Receber (Físico)')]")), "Texto 'A Receber (Físico)' não foi encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'A Receber (Físico)')]")), "Texto 'A Receber (Físico)' não foi encontrado!");	
 		
 		operacoesDocumentoPage.clicarLinkExibirInformacoesCompletas();
 		operacoesDocumentoPage.clicarProtocolo();
 		operacoesDocumentoPage.clicarLinkDesfazerTransferencia();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
 	}
 	
 	@Test(enabled = true, priority = 4)

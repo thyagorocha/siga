@@ -37,10 +37,10 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 			efetuaLogin();
 			principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
-			
+
+			principalPage.clicarBotaoNovoDocumentoEx();			
 			PortariaPage portariaPage = PageFactory.initElements(driver, PortariaPage.class);
-			principalPage.clicarBotaoNovoDocumentoEx();
-			portariaPage.criaPortaria(propDocumentos);
+			portariaPage.criaPortaria(propDocumentos);			
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
@@ -74,7 +74,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkAssinarDigitalmente();
 		AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
 		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);	
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Aguardando Andamento')]")), "Texto Aguardando Andamento não foi encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto Aguardando Andamento não foi encontrado!");
 		//Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Assinatura')]")), "Linha de registro da assinatura não encontrada!");
 	}
 	
@@ -85,7 +85,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		anexoPage.anexarArquivo(propDocumentos);	
 		Assert.assertNotNull(util.getWebElement(driver, By.linkText(propDocumentos.getProperty("arquivoAnexo").toLowerCase())), "Nome do arquivo selecionado não encontrado na tela!");
 		anexoPage.clicarBotaovoltar();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[1][contains(text(), 'Anexo Pendente de Assinatura/Conferência')]")), 
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Anexo Pendente de Assinatura/Conferência')]")), 
 				"Texto Anexo Pendente de Assinatura/Conferência não foi encontrado!");
 	}
 	
