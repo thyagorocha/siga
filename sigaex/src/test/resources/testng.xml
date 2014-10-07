@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="TestAll">
-	<test name="SigaDoc">
+	<test name="SigaDoc - Expediente">
 		<classes>		
  			<class name="br.gov.jfrj.siga.integration.test.CriacaoDocumentoIT"/>
 			<class name="br.gov.jfrj.siga.integration.test.AcoesDocumentoIT"/>			
 			<class name="br.gov.jfrj.siga.integration.test.AcoesDocumentoDigitalIT"/>	 						
 		</classes>
 	</test>	
+	
+	<test name="SigaDoc - Processo">
+		<classes>
+			<class name="br.gov.jfrj.siga.integration.test.ProcessoFisicoIT"/>
+		</classes>
+	</test>
 </suite>

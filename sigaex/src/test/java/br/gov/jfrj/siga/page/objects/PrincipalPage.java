@@ -3,6 +3,7 @@ package br.gov.jfrj.siga.page.objects;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -18,6 +19,9 @@ public class PrincipalPage {
 	
 	@FindBy(css="a.gt-btn-small.gt-btn-right")
 	private WebElement botaoNovoDocumentoEx;
+	
+	@FindBy(id="buscar_genericoSel_sigla")
+	private WebElement caixaBusca;
 	
 	private IntegrationTestUtil util;
 	
@@ -41,5 +45,11 @@ public class PrincipalPage {
 			System.out.println("TimeOut aguardando a página de novo documento ser exibida. Tentando clicar novamente...");
 			botaoNovoDocumentoEx.click();
 		}
+	}
+	
+	public void buscarDocumento(String codigoDocumento) {
+		util.preencheElemento(driver, caixaBusca, codigoDocumento);
+		caixaBusca.sendKeys(Keys.ENTER);
+		//util.getWebElement(driver, By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/img")).click();
 	}
 }

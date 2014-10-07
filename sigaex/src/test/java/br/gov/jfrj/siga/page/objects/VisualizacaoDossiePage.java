@@ -17,6 +17,9 @@ public class VisualizacaoDossiePage {
 	@FindBy(css="table.gt-table")
 	private WebElement documentosTable;
 	
+	@FindBy(linkText="Visualizar Movimentações")
+	private WebElement linkVisualizarMovimentacoes;
+	
 	private IntegrationTestUtil util;
 	
 	public VisualizacaoDossiePage(WebDriver driver) {
@@ -41,5 +44,21 @@ public class VisualizacaoDossiePage {
 		}
 		
 		return numeroDespachoEncontrado;
+	}
+	
+	public void clicarLinkDocumentoDossie(String codigoDocumento) {
+		util.getWebElement(driver, By.partialLinkText(codigoDocumento)).click();
+	}
+	
+	public void clicarLinkVisualizarMovimentacoes() {
+		linkVisualizarMovimentacoes.click();
+	}
+	
+	public Boolean visualizaConteudo(String conteudo) {
+		String windowHandle = driver.getWindowHandle();
+		new WebDriverWait(driver, 30).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("painel")));		
+		WebElement element = util.getWebElement(driver, By.xpath("//p[contains(text(), '"+ conteudo +"')]"));	
+		driver.switchTo().window(windowHandle);
+		return (element != null ? true : false);		
 	}
 }

@@ -5,12 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 
@@ -43,6 +40,8 @@ public class AnexoPage {
 	}
 	
 	public void anexarArquivo(Properties propDocumentos) {
+		botaoOk.click();
+		util.closeAlertAndGetItsText(driver);
 		util.preencheElemento(driver,dataAnexo, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver, responsavel, propDocumentos.getProperty("siglaSubscritor"));
 		util.preencheElemento(driver, descricao, propDocumentos.getProperty("descricaoAnexo") ); 

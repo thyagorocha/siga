@@ -1,7 +1,6 @@
 package br.gov.jfrj.siga.page.objects;
 
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;

@@ -59,20 +59,36 @@ public class TransferenciaPage {
 	}
 	
 	public void despacharDocumento(Properties propDocumentos) {
-		util.openPopup(driver);
-		
+		util.openPopup(driver);		
 		try {
-			String URL = driver.getCurrentUrl();
-			util.preencheElemento(driver, data, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
-			util.preencheElemento(driver, subscritor, propDocumentos.getProperty("siglaSubscritor"));
-			util.preencheElemento(driver, funcaoLotacao, propDocumentos.getProperty("funcaoLocalidade"));
-			util.getSelect(driver, despacho).selectByVisibleText(propDocumentos.getProperty("despacho"));
-			new WebDriverWait(driver, 30).until(util.trocaURL(URL));
-			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
-			botaoOk.click();
+			despachar(propDocumentos);
 		} finally {
 			util.closePopup(driver);
 		}
+	}
+	
+	public Boolean despacharVolumeEncerrado(Properties propDocumentos) {		
+		util.openPopup(driver);		
+		try {
+			despachar(propDocumentos);
+			if(util.getWebElement(driver, By.xpath("//h3[contains(text(), 'Não é permitido')]")) != null) {
+				return Boolean.FALSE;
+			}			
+		} finally {
+			util.closePopup(driver);
+		}
+		return Boolean.TRUE;
+	}
+	
+	private void despachar(Properties propDocumentos) {
+		String URL = driver.getCurrentUrl();
+		util.preencheElemento(driver, data, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
+		util.preencheElemento(driver, subscritor, propDocumentos.getProperty("siglaSubscritor"));
+		util.preencheElemento(driver, funcaoLotacao, propDocumentos.getProperty("funcaoLocalidade"));
+		util.getSelect(driver, despacho).selectByVisibleText(propDocumentos.getProperty("despacho"));
+		new WebDriverWait(driver, 30).until(util.trocaURL(URL));
+		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
+		botaoOk.click();
 	}
 	
 	public void transferirDocumento(Properties propDocumentos) {
