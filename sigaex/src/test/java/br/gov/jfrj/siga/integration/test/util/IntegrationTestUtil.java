@@ -1,7 +1,9 @@
 package br.gov.jfrj.siga.integration.test.util;
 
+import java.util.List;
 import java.util.Set;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -26,6 +28,18 @@ public class IntegrationTestUtil {
 	public Select getSelect(WebDriver driver, WebElement element) {
 		new WebDriverWait(driver, 30).ignoring(NoSuchElementException.class, StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(element)).click();
 		return new Select(element);
+	}
+	
+	public WebElement getContentDiv(WebDriver driver, By option, String content) {		
+		List<WebElement> elements = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfAllElementsLocatedBy(option));	
+		WebElement div = null;		
+		for (WebElement webElement : elements) {
+			if(webElement.getText().contains(content)) {
+				div = webElement;
+				break;
+			}
+		}		
+		return div;
 	}
 	
 	public WebElement getWebElement(WebDriver driver, By option) {
@@ -101,6 +115,14 @@ public class IntegrationTestUtil {
 			}
 		}			
 		driver.switchTo().window(winHandle);
+	}
+	
+	public String closeAlertAndGetItsText(WebDriver driver) {
+		new WebDriverWait(driver, 30).until(ExpectedConditions.alertIsPresent());
+	    Alert alert = driver.switchTo().alert();
+		String alertText = alert.getText();
+		alert.accept();
+		return alertText;
 	}
 
 	  public ExpectedCondition<Boolean> trocaURL(final String URL) {
