@@ -1,6 +1,5 @@
 package br.gov.jfrj.siga.page.objects;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -111,6 +110,18 @@ public class OperacoesDocumentoPage {
 	
 	@FindBy(linkText="Cancelar Via")
 	private WebElement linkCancelarVia;
+	
+	@FindBy(linkText="Autuar")
+	private WebElement linkAutuar;
+	
+	@FindBy(linkText="Encerrar Volume")
+	private WebElement linkEncerrarVolume;
+	
+	@FindBy(linkText="Abrir Novo Volume")
+	private WebElement linkAbrirNovoVolume;
+	
+	@FindBy(linkText="Criar Subprocesso")
+	private WebElement linkCriarSubprocesso;
 			
 	@FindBy(id="buscar_genericoSel_sigla")
 	private WebElement buscaGenerica;
@@ -168,7 +179,7 @@ public class OperacoesDocumentoPage {
 
 	public void clicarLinkDesfazerRedefinicaoSigilo() {
 		linkDesfazerRedefinicaoSigilo.click();
-		closeAlertAndGetItsText();
+		util.closeAlertAndGetItsText(driver);
 	}
 	
 	public void clicarCriarVia() {
@@ -189,7 +200,7 @@ public class OperacoesDocumentoPage {
 	
 	public void clicarLinkDesfazerSolicitacaoPublicacaoBoletim() {
 		linkDesfazerSolicitacaoPublicacaoBoletim.click();
-		closeAlertAndGetItsText();
+		util.closeAlertAndGetItsText(driver);
 	}
 	
 	public void clicarLinkSobrestar() {
@@ -210,7 +221,7 @@ public class OperacoesDocumentoPage {
 	
 	public void clicarLinkDesfazerArquivamentoCorrente() {
 		linkDesfazerArquivamentoCorrente.click();
-		closeAlertAndGetItsText();
+		util.closeAlertAndGetItsText(driver);
 	}
 	
 	public void clicarLinkApensar() {
@@ -241,61 +252,85 @@ public class OperacoesDocumentoPage {
 		linkExibirInformacoesCompletas.click();
 	}
 	
+	public void clicarLinkAutuar() {
+		linkAutuar.click();
+	}
+	
+	public void clicarLinkCriarSubprocesso() {
+		linkCriarSubprocesso.click();
+	}
+	
+	public void clicarLinkAbrirNovoVolume() {
+		linkAbrirNovoVolume.click();
+		util.closeAlertAndGetItsText(driver);
+		util.getWebElement(driver,By.xpath("//h3[contains(text(),'Volumes')]"));
+	}
+	
+	public void clicarLinkEncerrarVolume() {
+		linkEncerrarVolume.click();
+		util.closeAlertAndGetItsText(driver);
+	}
+	
 	public void clicarLinkDesfazerDefinicaoPerfil() {
 		linkDesfazerDefinicaoPerfil.click();
-		closeAlertAndGetItsText();
+		util.closeAlertAndGetItsText(driver);
 	}
 	
 	public void clicarLinkDesfazerTransferencia() {
 		linkDesfazerTransferencia.click();
-		closeAlertAndGetItsText();		
+		util.closeAlertAndGetItsText(driver);		
 	}
 	
 	public void clicarLinkVisualizarImpressao() {
-		System.out.println("URL: " + driver.getCurrentUrl());
 		linkVisualizarImpressao.click();
-		new WebDriverWait(driver, 30).until(util.popupDisponivel());
-		String winHandleBefore = driver.getWindowHandle();
-		String popupHandle = (String) driver.getWindowHandles().toArray()[1];
-		
-		driver.switchTo().window(popupHandle); 	
-		
-		if(popupHandle.equals(driver.getWindowHandle())) {			
-			System.out.println("Title: " + driver.getTitle());
-			System.out.println("Pagesource: " + driver.getPageSource());
-		}
-		System.out.println("URL: " + driver.getCurrentUrl());
 
+		util.openPopup(driver);
 		
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div[2]/div[4]/div/div/div[2]/div[1]")));
-		driver.close();
-		driver.switchTo().window(winHandleBefore);
+		try {
+			System.out.println("URL: " + driver.getCurrentUrl());
+			System.out.println("PageSource: " + driver.getPageSource());
+			System.out.println("Title: " + driver.getTitle());
+		} finally {
+			util.closePopup(driver);
+		}
+		
+		//new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div[2]/div[4]/div/div/div[2]/div[1]")));
+
 	}
 	
 	public void clicarCancelarVia() {
 		//WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//a[2][contains(text(),'Cancelar Via')])")));
 		linkCancelarVia.click();
-		closeAlertAndGetItsText();
+		util.closeAlertAndGetItsText(driver);
 	}
 		
 	public void clicarLinkDuplicar() {
 		linkDuplicar.click();
-		closeAlertAndGetItsText();
+		util.closeAlertAndGetItsText(driver);
 		String URL= driver.getCurrentUrl();
 		new WebDriverWait(driver, 30).until(util.trocaURL(URL));
 	}	
 	
 	public void clicarLinkExcluir() {
 		linkExcluir.click();
-		closeAlertAndGetItsText();
+		util.closeAlertAndGetItsText(driver);
 		new WebDriverWait(driver, 30).until(ExpectedConditions.titleIs("SIGA - Página Inicial"));
 	}	
 	
 	public void clicarLinkFinalizar() {
 		linkFinalizar.click();
-	    closeAlertAndGetItsText();
-	    new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.linkText("Finalizar")));
+	    util.closeAlertAndGetItsText(driver);
+	    new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOfElementLocated(By.linkText("Finalizar")));
 	}	
+	
+	public void clicarLinkAssinarCopia() {
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Assinar/Conferir cópia"))).click();
+	}
+	
+	public void clicarLinkCancelarAnexo() {
+		WebElement anexacao = util.getWebElement(driver, By.xpath("//tr[contains(@class, 'anexacao ')]"));
+		util.getWebElement(driver, anexacao, By.linkText("Cancelar")).click();
+	}
 	
 	public void efetuaBuscaDocumento(String codigoDocumento) {
 		buscaGenerica.clear();
@@ -303,27 +338,7 @@ public class OperacoesDocumentoPage {
 		driver.findElement(By.linkText("/html/body/div[1]/div/div[1]/div/div[2]/img")).click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Visualizar Impressão")));
 	}
-	
-	public void clicarAssinarCopia(String baseURL, String codigoDocumento) {		
-		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Assinar/Conferir cópia"))).click();
-		String codigoAnexo;
-		
-		util.openPopup(driver);
-		
-		try {
-			String urlPopup = driver.getCurrentUrl();
-			System.out.println("URL: " + driver.getCurrentUrl());
-			new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[2]/div/div/p[1]/b")));
-			codigoAnexo = urlPopup.substring(urlPopup.indexOf("id=")+3, urlPopup.indexOf("&"));
-			System.out.println("Código anexo: " + codigoAnexo);		
-		} finally {
-			util.closePopup(driver);
-		}
 
-		driver.get(baseURL + "/sigaex/expediente/mov/simular_assinatura_mov.action?sigla="+ codigoDocumento + "&id="+codigoAnexo);				
-		System.out.println("URL: " + driver.getCurrentUrl());
-	}
-	
 	public void clicarAssinarDespacho(String baseURL, String codigoDocumento) {		
 /*		WebElement despacho = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[7][contains(., '" + propDocumentos.getProperty("despacho") + "')]")));
 		despacho.findElement(By.linkText("Ver/Assinar")).click();*/
@@ -358,11 +373,4 @@ public class OperacoesDocumentoPage {
 		}
 	}
 	
-	private String closeAlertAndGetItsText() {
-		new WebDriverWait(driver, 30).until(ExpectedConditions.alertIsPresent());
-	    Alert alert = driver.switchTo().alert();
-		String alertText = alert.getText();
-		alert.accept();
-		return alertText;
-	}
 }
