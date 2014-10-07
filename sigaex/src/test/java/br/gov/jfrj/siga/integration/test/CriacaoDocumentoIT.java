@@ -14,7 +14,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.EditaDocumentoPage;
 import br.gov.jfrj.siga.page.objects.MemorandoPage;
 import br.gov.jfrj.siga.page.objects.OficioPage;
@@ -25,12 +24,9 @@ import br.gov.jfrj.siga.page.objects.PrincipalPage;
 public class CriacaoDocumentoIT extends IntegrationTestBase{
 	private PrincipalPage principalPage;
 	private EditaDocumentoPage editaDocumentoPage;
-	private OperacoesDocumentoPage operacoesDocumentoPage;
-	private IntegrationTestUtil util;
 	
 	public CriacaoDocumentoIT() throws FileNotFoundException, IOException {
 		super();
-		util = new IntegrationTestUtil();
 	}
 
 	@BeforeClass	

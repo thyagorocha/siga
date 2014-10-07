@@ -15,7 +15,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.AgendamentoPublicacaoPage;
 import br.gov.jfrj.siga.page.objects.AnexoPage;
 import br.gov.jfrj.siga.page.objects.AnotacaoPage;
@@ -35,13 +34,10 @@ import br.gov.jfrj.siga.page.objects.VinculacaoPage;
 import br.gov.jfrj.siga.page.objects.VisualizacaoDossiePage;
 
 public class AcoesDocumentoIT extends IntegrationTestBase {
-	private OperacoesDocumentoPage operacoesDocumentoPage;
 	private String codigoDocumento;
-	private IntegrationTestUtil util;
 	
 	public AcoesDocumentoIT() throws FileNotFoundException, IOException {
 		super();
-		util = new IntegrationTestUtil();
 	}
 	
 	@BeforeClass	
@@ -104,8 +100,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	
 	@Test(enabled = true, priority = 3)
 	public void assinarAnexo() {
-		operacoesDocumentoPage.clicarAssinarCopia(baseURL, codigoDocumento);	
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[4][contains(., 'Assinado por')]")), "O texto 'Assinado por' não foi encontrado!");
+		super.assinarAnexo(codigoDocumento);
 	}
 	
 	@Test(enabled = true, priority = 1)

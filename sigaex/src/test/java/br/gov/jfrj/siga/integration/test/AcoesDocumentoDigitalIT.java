@@ -12,7 +12,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.AnexoPage;
 import br.gov.jfrj.siga.page.objects.AssinaturaDigitalPage;
 import br.gov.jfrj.siga.page.objects.OperacoesDocumentoPage;
@@ -21,21 +20,17 @@ import br.gov.jfrj.siga.page.objects.PrincipalPage;
 import br.gov.jfrj.siga.page.objects.TransferenciaPage;
 
 public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
-	private PrincipalPage principalPage;
-	private OperacoesDocumentoPage operacoesDocumentoPage;
 	private String codigoDocumento;
-	private IntegrationTestUtil util;
 	
 	public AcoesDocumentoDigitalIT() throws FileNotFoundException, IOException {
 		super();
-		util = new IntegrationTestUtil();
 	}
 	
 	@BeforeClass	
 	public void setUp() {
 		try {
 			efetuaLogin();
-			principalPage = PageFactory.initElements(driver, PrincipalPage.class);
+			PrincipalPage principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
 
 			principalPage.clicarBotaoNovoDocumentoEx();			
