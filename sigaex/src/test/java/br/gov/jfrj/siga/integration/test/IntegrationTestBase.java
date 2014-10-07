@@ -18,6 +18,7 @@ import br.gov.jfrj.siga.integration.test.util.IntegrationTestUtil;
 import br.gov.jfrj.siga.page.objects.AssinaturaAnexoPage;
 import br.gov.jfrj.siga.page.objects.LoginPage;
 import br.gov.jfrj.siga.page.objects.OperacoesDocumentoPage;
+import br.gov.jfrj.siga.page.objects.ProcessoFinanceiroPage;
 
 public class IntegrationTestBase {
 	protected WebDriver driver;
@@ -62,5 +63,36 @@ public class IntegrationTestBase {
 		AssinaturaAnexoPage assinaturaAnexoPage = PageFactory.initElements(driver, AssinaturaAnexoPage.class);
 		assinaturaAnexoPage.assinarCopia(baseURL, codigoDocumento);
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[4][contains(., 'Assinado por')]")), "O texto 'Assinado por' não foi encontrado!");
+	}
+	
+	public void autuar(Boolean isDigital){
+		operacoesDocumentoPage.clicarLinkAutuar();
+		ProcessoFinanceiroPage processoFinanceiroPage = PageFactory.initElements(driver, ProcessoFinanceiroPage.class);
+		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos, isDigital);
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//b[contains(., 'Processo Nº')]")), "Texto 'Processo Nº' não foi encontrado!");		
+	}
+	
+	public void finalizarProcesso() {
+		operacoesDocumentoPage.clicarLinkFinalizar();
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + 
+				"[contains(text(), '1º Volume - Pendente de Assinatura, Como Subscritor')]")), "Texto '1º Volume - Pendente de Assinatura, Como Subscritor' não foi encontrado!");
+	}
+	
+	public void validaDesentranhamento(String codigoProcesso) {		
+		// Clicar em Exibir Informações completas
+		operacoesDocumentoPage.clicarLinkExibirInformacoesCompletas();
+		
+		// Acessar novamente o processo, pelo link existente na linha do evento de juntada
+		WebElement desentranhamentoDocumento = util.getWebElement(driver, By.xpath("//tr[contains(@class, 'desentranhamento ')]"));
+		Assert.assertNotNull(desentranhamentoDocumento, "Evento de desentranhamento não encontrado!");
+		WebElement linkProcessoDesentranhado = util.getWebElement(driver, desentranhamentoDocumento, By.partialLinkText(codigoProcesso));
+		linkProcessoDesentranhado.click();
+		
+		// Clicar em Exibir informações completas
+		operacoesDocumentoPage.clicarLinkExibirInformacoesCompletas();
+		
+		// Garantir que o texto "Desentranhamento" apareça na tela
+		WebElement desentranhamentoProcesso = util.getWebElement(driver, By.xpath("//tr[contains(@class, 'desentranhamento ')]"));
+		Assert.assertNotNull(desentranhamentoProcesso, "Evento de desentranhamento não encontrado!");	
 	}
 }

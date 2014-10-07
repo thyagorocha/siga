@@ -22,4 +22,7 @@ public class AssinaturaDigitalPage {
 		driver.get(baseURL + "/sigaex/expediente/mov/simular_assinatura.action?sigla=" + codigoDocumento);		
 	}
 	
+	public void registrarAssinaturaProcesso(String baseURL, String codigoDocumento) {
+		driver.get(baseURL + "/sigaex/expediente/mov/simular_assinatura.action?sigla=" + codigoDocumento);		
+	}
 }

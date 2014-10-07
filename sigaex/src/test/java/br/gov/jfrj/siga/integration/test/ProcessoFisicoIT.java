@@ -85,7 +85,7 @@ public class ProcessoFisicoIT extends IntegrationTestBase {
 	public void autuar(){
 		operacoesDocumentoPage.clicarLinkAutuar();
 		ProcessoFinanceiroPage processoFinanceiroPage = PageFactory.initElements(driver, ProcessoFinanceiroPage.class);
-		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos);
+		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos, Boolean.FALSE);
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//b[contains(., 'Processo Nº')]")), "Texto 'Processo Nº' não foi encontrado!");		
 	}
 	
@@ -121,7 +121,7 @@ public class ProcessoFisicoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkVisualizarDossie();
 		
 		VisualizacaoDossiePage visualizacaoDossiePage = PageFactory.initElements(driver, VisualizacaoDossiePage.class);	
-		Assert.assertTrue(visualizacaoDossiePage.visualizaConteudo(codigoDocumento), "Conteúdo do documento juntado não encontrado!");
+		Assert.assertTrue(visualizacaoDossiePage.visualizaConteudo(By.xpath("//p[contains(text(), '"+ codigoDocumento +"')]")), "Conteúdo do documento juntado não encontrado!");
 		visualizacaoDossiePage.clicarLinkVisualizarMovimentacoes();
 	}
 	
@@ -172,7 +172,6 @@ public class ProcessoFisicoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkVisualizarDossie();
 		
 		// Garantir que o nome do anexo apareça na tela (é a seção OBJETO, da capa do processo)
-		nomeArquivo.substring(nomeArquivo.indexOf("."));
 		Assert.assertNotNull(util.getWebElement(driver, By.linkText(nomeArquivo.substring(0, nomeArquivo.indexOf(".")).toLowerCase())), "Nome do arquivo selecionado não encontrado na visualização do Dossiê!");
 
 		// Clicar em "Visualizar Movimentações"
@@ -264,7 +263,7 @@ public class ProcessoFisicoIT extends IntegrationTestBase {
 		
 		// Selecionar um subscritor qualquer - Clicar "OK"
 		ProcessoFinanceiroPage processoFinanceiroPage = PageFactory.initElements(driver, ProcessoFinanceiroPage.class);
-		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos);
+		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos, Boolean.FALSE);
 		
 		// Clicar em Finalizar
 		operacoesDocumentoPage.clicarLinkFinalizar();

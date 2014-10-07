@@ -54,11 +54,23 @@ public class VisualizacaoDossiePage {
 		linkVisualizarMovimentacoes.click();
 	}
 	
-	public Boolean visualizaConteudo(String conteudo) {
+	public Boolean visualizaConteudo(By option) {
 		String windowHandle = driver.getWindowHandle();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("painel")));		
-		WebElement element = util.getWebElement(driver, By.xpath("//p[contains(text(), '"+ conteudo +"')]"));	
+		WebElement element = util.getWebElement(driver, option);	
 		driver.switchTo().window(windowHandle);
 		return (element != null ? true : false);		
+	}
+	
+	public String getNumeroPagina(String documentoDossie) {
+		WebElement linhaDocumentoJuntado = util.getWebElement(driver, By.xpath("//tr[contains(td, '" + documentoDossie + "')]"));
+		String[] dadosDocumentoJuntado = linhaDocumentoJuntado.getText().split(" ");
+		
+		return dadosDocumentoJuntado[dadosDocumentoJuntado.length - 1];
+	}
+	
+	public Boolean visualizaNumeroPagina(String documentoDossie) {
+		clicarLinkDocumentoDossie(documentoDossie);				
+		return visualizaConteudo(By.xpath("//div[contains(@class, 'numeracao') and contains(text(), '" + getNumeroPagina(documentoDossie) +"')]"));
 	}
 }
