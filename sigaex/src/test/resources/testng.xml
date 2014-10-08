@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="TestAll">
+<suite name="Testes de Integração do SigaDoc">
 	<test name="SigaDoc - Expediente">
-<!-- 		<classes>		
+		<classes>		
  			<class name="br.gov.jfrj.siga.integration.test.CriacaoDocumentoIT"/>
 			<class name="br.gov.jfrj.siga.integration.test.AcoesDocumentoIT"/>			
 			<class name="br.gov.jfrj.siga.integration.test.AcoesDocumentoDigitalIT"/>	 						
-		</classes> -->
+		</classes>
 	</test>	
 	
 	<test name="SigaDoc - Processo">
 		<classes>
-			<!-- <class name="br.gov.jfrj.siga.integration.test.ProcessoFisicoIT"/> -->
-			<class name="br.gov.jfrj.siga.integration.test.ProcessoDigitalIT"/>
+			<class name="br.gov.jfrj.siga.integration.test.ProcessoAdministrativoFisicoIT"/>
+			<class name="br.gov.jfrj.siga.integration.test.ProcessoAdministrativoDigitalIT"/>
 		</classes>
 	</test>
 </suite>
