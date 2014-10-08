@@ -13,7 +13,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import br.gov.jfrj.siga.page.objects.AnexoPage;
 import br.gov.jfrj.siga.page.objects.AssinaturaDigitalPage;
 import br.gov.jfrj.siga.page.objects.CancelamentoJuntadaPage;
 import br.gov.jfrj.siga.page.objects.OperacoesDocumentoPage;
@@ -21,13 +20,12 @@ import br.gov.jfrj.siga.page.objects.PortariaPage;
 import br.gov.jfrj.siga.page.objects.PrincipalPage;
 import br.gov.jfrj.siga.page.objects.VisualizacaoDossiePage;
 
-public class ProcessoDigitalIT extends IntegrationTestBase {
+public class ProcessoAdministrativoDigitalIT extends IntegrationTestBase {
 	private String codigoDocumento;
 	private String codigoProcesso;
 	
-	public ProcessoDigitalIT() throws FileNotFoundException, IOException {
+	public ProcessoAdministrativoDigitalIT() throws FileNotFoundException, IOException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	@BeforeClass
@@ -47,9 +45,6 @@ public class ProcessoDigitalIT extends IntegrationTestBase {
 			operacoesDocumentoPage.clicarLinkAssinarDigitalmente();			
 			AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
 			assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);			
-			
-/*			codigoDocumento = "JFRJ-POR-2014/00102";
-			codigoProcesso = "JFRJ-EOF-2014/00055";*/
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
@@ -60,14 +55,12 @@ public class ProcessoDigitalIT extends IntegrationTestBase {
 	public void paginaInicial(Method method) {
 		try {
 			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
-			if(!driver.getCurrentUrl().contains("exibir.action")) {
+			if(!driver.getCurrentUrl().contains("exibir.action") || driver.getTitle().contains("SIGA - Erro Geral")) {
 				System.out.println("Efetuando busca!");
 				
 				if(codigoProcesso != null) {	
-					//principalPage.buscarDocumento(codigoProcesso);
 					driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoProcesso);		
 				} else {
-					//principalPage.buscarDocumento(codigoDocumento);
 					driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);		
 				}	
 			}
@@ -90,18 +83,7 @@ public class ProcessoDigitalIT extends IntegrationTestBase {
 	
 	@Test(enabled = true, priority = 2)
 	public void assinarDigitalmente() {
-		// Clicar em Assinar Digitalmente
-		operacoesDocumentoPage.clicarLinkAssinarDigitalmente();
-		
-		// Garantir que a descrição do documento apareça na tela (é a seção OBJETO, da capa do processo)
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//p[contains(text(), '" + propDocumentos.getProperty("descricao") + "')]")), "Descrição do documento não encontrada!");
-			
-		// usar o link /sigaex/expediente/mov/simular_assinatura?sigla=<código do documento> para gerar uma movimentação de assinatura digital
-		AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
-		assinaturaDigitalPage.registrarAssinaturaProcesso(baseURL, codigoProcesso);
-		
-		// Garantir que "Aguardando Andamento" apareça na tela
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");				
+		super.assinarDigitalmente(codigoProcesso, propDocumentos.getProperty("descricao"));
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -135,21 +117,10 @@ public class ProcessoDigitalIT extends IntegrationTestBase {
 		validaDesentranhamento(codigoProcesso);
 	}
 	
-	@Test(enabled = true, priority = 2)
+	@Test(enabled = true, priority = 3)
 	public void anexarArquivo() {
-		// Clicar no link "Anexar Arquivo"
-		operacoesDocumentoPage.clicarLinkAnexarArquivo();
-		
-		// Clicar "OK" - Selecionar um arquivo qualquer - Clicar "OK"
-		AnexoPage anexoPage = PageFactory.initElements(driver, AnexoPage.class);
-		anexoPage.anexarArquivo(propDocumentos);
-		
-		// Garantir que o nome do arquivo selecionado apareça na tela
 		String nomeArquivo = propDocumentos.getProperty("arquivoAnexo");
-		Assert.assertNotNull(util.getWebElement(driver, By.linkText(nomeArquivo.toLowerCase())), "Nome do arquivo selecionado não encontrado na tela!");
-		
-		// Clicar em voltar
-		anexoPage.clicarBotaovoltar();
+		super.anexarArquivo(nomeArquivo);
 		
 		// Se o documento for digital, garantir que a String "Anexo Pendente de Assinatura/Conferência" apareça na tela
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + 
@@ -157,8 +128,9 @@ public class ProcessoDigitalIT extends IntegrationTestBase {
 		
 		// Clicar em "Visualizar Dossiê"
 		operacoesDocumentoPage.clicarLinkVisualizarDossie();
-		String documentoDossie = nomeArquivo.substring(0, nomeArquivo.indexOf(".")).toLowerCase();
+		
 		// Garantir que o nome do anexo apareça na tela (é a seção OBJETO, da capa do processo)
+		String documentoDossie = nomeArquivo.substring(0, nomeArquivo.indexOf(".")).toLowerCase();
 		VisualizacaoDossiePage visualizacaoDossiePage = PageFactory.initElements(driver, VisualizacaoDossiePage.class);
 		Assert.assertTrue(visualizacaoDossiePage.visualizaConteudo(By.xpath("//td[contains(div[@class = 'numeracao'], '" + visualizacaoDossiePage.getNumeroPagina(documentoDossie) +"') "
 				+ "and contains(div[@class = 'anexo'], a[text()='" + documentoDossie +"'])]")), "O número da página não foi visualizado!");
@@ -166,6 +138,34 @@ public class ProcessoDigitalIT extends IntegrationTestBase {
 		// Clicar em "Visualizar Movimentações"
 		visualizacaoDossiePage.clicarLinkVisualizarMovimentacoes();
 	}	
+	
+	@Test(enabled = true, priority = 4)
+	public void assinarAnexo() {
+		super.assinarAnexo(codigoDocumento);
+		Assert.assertTrue(util.isElementInvisible(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Anexo Pendente de Assinatura/Conferência')]")),
+				"Texto 'Anexo Pendente de Assinatura/Conferência' ainda está visível!");
+	}
+	
+	@Test(enabled = true, priority = 5)
+	public void cancelarAnexo() {
+		super.cancelarAnexo();
+		
+		// Se o documento for eletrônico, garantir que o texto "CERTIDÃO DE DESENTRANHAMENTO" e o nome do subscritor escolhido no cancelamento apareçam na tela
+		VisualizacaoDossiePage visualizacaoDossiePage = PageFactory.initElements(driver, VisualizacaoDossiePage.class);		
+		Assert.assertTrue(visualizacaoDossiePage.visualizaConteudo(By.xpath("//div[@class='documento'][contains(., 'CERTIDÃO DE DESENTRANHAMENTO')"+ 
+		" and contains(., '" + propDocumentos.getProperty("nomeResponsavel").toUpperCase() + "')]")), "Certidão de desentranhamento ou nome do subscritor não encontrado!");
+		
+		// Clicar em "Visualizar Movimentações"
+		visualizacaoDossiePage.clicarLinkVisualizarMovimentacoes();
+	}
+	
+	@Test(enabled = true, priority = 6)
+	public void encerrarVolume() {
+		super.encerrarVolume();
+		
+		// Clicar em "Ver/Assinar" (no mesmo <tr> do evento Encerramento de Volume).  - Garantir que o texto "encerrei o volume 1" apareça na tela 
+		Assert.assertTrue(operacoesDocumentoPage.clicarAssinarEncerramentoVolume(), "Texto 'encerrei o volume' não foi visualizado!");		
+	}
 	
 	@AfterClass
 	public void tearDown() throws Exception {
