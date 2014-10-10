@@ -16,10 +16,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import br.gov.jfrj.siga.page.objects.AgendamentoPublicacaoPage;
-import br.gov.jfrj.siga.page.objects.AnexoPage;
 import br.gov.jfrj.siga.page.objects.AnotacaoPage;
 import br.gov.jfrj.siga.page.objects.ApensacaoPage;
-import br.gov.jfrj.siga.page.objects.AssinaturaDigitalPage;
 import br.gov.jfrj.siga.page.objects.CancelamentoMovimentacaoPage;
 import br.gov.jfrj.siga.page.objects.DefinePerfilPage;
 import br.gov.jfrj.siga.page.objects.DesapensamentoPage;
@@ -28,7 +26,6 @@ import br.gov.jfrj.siga.page.objects.OficioPage;
 import br.gov.jfrj.siga.page.objects.OperacoesDocumentoPage;
 import br.gov.jfrj.siga.page.objects.PrincipalPage;
 import br.gov.jfrj.siga.page.objects.RedefineNivelAcessoPage;
-import br.gov.jfrj.siga.page.objects.RegistraAssinaturaManualPage;
 import br.gov.jfrj.siga.page.objects.TransferenciaPage;
 import br.gov.jfrj.siga.page.objects.VinculacaoPage;
 import br.gov.jfrj.siga.page.objects.VisualizacaoDossiePage;
@@ -91,11 +88,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	
 	@Test(enabled = true, priority = 2)
 	public void anexarArquivo() {
-		operacoesDocumentoPage.clicarLinkAnexarArquivo();
-		AnexoPage anexoPage = PageFactory.initElements(driver, AnexoPage.class);
-		anexoPage.anexarArquivo(propDocumentos);
-		Assert.assertNotNull(util.getWebElement(driver,By.linkText(propDocumentos.getProperty("arquivoAnexo").toLowerCase())), "O nome do arquivo selecionado não apareceu na tela!");
-		anexoPage.clicarBotaovoltar();
+		super.anexarArquivo(propDocumentos.getProperty("arquivoAnexo"));
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -105,9 +98,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	
 	@Test(enabled = true, priority = 1)
 	public void finalizarDocumento() {
-		operacoesDocumentoPage.clicarLinkFinalizar();
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h3[1]")
-				.contains("Pendente de Assinatura, Como Subscritor"), "Texto Pendente de Assinatura, Como Subscritor não foi encontrado!");		 
+		super.finalizarDocumento(); 
 	}
 	
 	@Test(enabled = true, priority = 3)
@@ -138,14 +129,8 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkDefinirPerfil();
 		DefinePerfilPage definePerfilPage = PageFactory.initElements(driver, DefinePerfilPage.class);
 		definePerfilPage.definirPerfil(propDocumentos);
-		List<WebElement> elements = driver.findElements(By.cssSelector("div.gt-sidebar-content"));
-		WebElement divPerfil = null;		
-		for (WebElement webElement : elements) {
-			if(webElement.getText().contains(propDocumentos.getProperty("perfil"))) {
-				divPerfil = webElement;
-				break;
-			}
-		}
+		WebElement divPerfil = util.getContentDiv(driver, By.cssSelector("div.gt-sidebar-content"), propDocumentos.getProperty("perfil"));		
+
 		Assert.assertNotNull(divPerfil, "Texto 'Interessado' não encontrado!");
 		Assert.assertTrue(divPerfil.getText().toUpperCase().contains(propDocumentos.getProperty("nomeResponsavel").toUpperCase()), "Nome do usuário responsável não encontrado!");			
 		operacoesDocumentoPage.clicarLinkDesfazerDefinicaoPerfil();
@@ -155,14 +140,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	@Test(enabled = true, priority = 2)
 	public void criarVia() {
 		operacoesDocumentoPage.clicarCriarVia();
-		List<WebElement> elements = driver.findElements(By.cssSelector("div.gt-sidebar-content"));
-		WebElement divVias = null;		
-		for (WebElement webElement : elements) {
-			if(webElement.getText().contains("Vias")) {
-				divVias = webElement;
-				break;
-			}
-		}
+		WebElement divVias = util.getContentDiv(driver, By.cssSelector("div.gt-sidebar-content"), "Vias");		
 		Assert.assertNotNull(divVias, "Texto 'Vias' não encontrado!");
 		
 		List<WebElement> listItems = divVias.findElements(By.tagName("li"));
@@ -180,19 +158,13 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	
 	@Test(enabled = true, priority = 3)
 	public void registrarAssinaturaManual() {		
-		operacoesDocumentoPage.clicarLinkRegistrarAssinaturaManual();
-		RegistraAssinaturaManualPage registraAssinaturaManualPage = PageFactory.initElements(driver, RegistraAssinaturaManualPage.class);
-		registraAssinaturaManualPage.registarAssinaturaManual();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
+		super.registrarAssinaturaManual();
 		//Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Registro de Assinatura')]")), "Texto 'Registro de Assinatura' não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 3)
 	public void assinarDigitalmente() {
-		operacoesDocumentoPage.clicarLinkAssinarDigitalmente();
-		AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
-		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");		
+		super.assinarDigitalmente(codigoDocumento, "Nº");
 		//Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Assinatura')]")), "Texto 'Assinatura' não encontrado!");
 	}
 	
