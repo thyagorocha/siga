@@ -281,21 +281,19 @@ public class OperacoesDocumentoPage {
 		util.closeAlertAndGetItsText(driver);		
 	}
 	
-	public void clicarLinkVisualizarImpressao() {
+	public Boolean clicarLinkVisualizarImpressao() {
 		linkVisualizarImpressao.click();
-
 		util.openPopup(driver);
 		
-		try {
-			System.out.println("URL: " + driver.getCurrentUrl());
-			System.out.println("PageSource: " + driver.getPageSource());
-			System.out.println("Title: " + driver.getTitle());
+		try {		
+			if(driver.getPageSource().equals("")) {
+				return true;
+			} else {
+				return false;
+			}
 		} finally {
 			util.closePopup(driver);
-		}
-		
-		//new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div[2]/div[4]/div/div/div[2]/div[1]")));
-
+		}		
 	}
 	
 	public void clicarCancelarVia() {
@@ -360,6 +358,22 @@ public class OperacoesDocumentoPage {
 
 		driver.get(baseURL + "/sigaex/expediente/mov/simular_assinatura_mov.action?sigla="+ codigoDocumento + "&id="+codigoDespacho);				
 		System.out.println("URL: " + driver.getCurrentUrl());
+	}
+	
+	public Boolean clicarAssinarEncerramentoVolume() {
+		WebElement textoEncerramento = null;
+		WebElement linkVerAssinar = util.getWebElement(driver, By.xpath("//tr[@class='encerramento_volume ']/td/a[contains(text(), 'Ver/Assinar')]"));
+		linkVerAssinar.click();
+		System.out.println("Conteudo do elemento: " + linkVerAssinar.getText());
+				
+		util.openPopup(driver);
+		try {
+			textoEncerramento = util.getWebElement(driver, By.xpath("//p[contains(text(), 'encerrei o volume')]"));
+		} finally {
+			util.closePopup(driver);
+		}
+		
+		return (textoEncerramento != null);
 	}
 	
 	public void clicarProtocolo() {	

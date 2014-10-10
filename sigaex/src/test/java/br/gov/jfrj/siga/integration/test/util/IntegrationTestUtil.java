@@ -66,7 +66,7 @@ public class IntegrationTestUtil {
 		Boolean invisible = Boolean.FALSE;
 		
 		try {
-			invisible = new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(option));
+			invisible = new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOfElementLocated(option));
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
@@ -74,7 +74,7 @@ public class IntegrationTestUtil {
 		return invisible;
 	}
 	
-	public WebElement isElementVisible(WebDriver driver, WebElement element) {
+	public Boolean isElementVisible(WebDriver driver, WebElement element) {
 		WebElement we = null; 
 
 		try {
@@ -83,7 +83,7 @@ public class IntegrationTestUtil {
 			e.printStackTrace();
 		}
 		
-		return we;
+		return (we != null);
 	}
 		
 	public WebDriver openPopup(WebDriver driver) {
