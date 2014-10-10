@@ -108,6 +108,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 		juntadaDocumentoPage.juntarDocumento(propDocumentos, codigoProcesso);	
 		
 		// Clicar no link com o número do processo ao qual o documento foi juntado para retornar à visualização das movimentações do processo
+		util.getWebElement(driver, By.xpath("//tr[contains(@class, 'juntada ')]"));
 		util.getWebElement(driver, By.partialLinkText(codigoProcesso)).click();
 		
 		// Clicar em "Visualizar Dossiê"
@@ -217,6 +218,5 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 	@AfterClass
 	public void tearDown() throws Exception {
 		efetuaLogout();
-		driver.quit();
 	}
 }

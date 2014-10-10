@@ -105,6 +105,8 @@ public class IntegrationTestUtil {
 	}
 	
 	public void closePopup(WebDriver driver) {	
+		// Esperando 5 segundos antes de fechar a popup
+		new WebDriverWait(driver, 5);
 		if(driver.getWindowHandles().size() > 1) {
 			Set<String> windowHandles = driver.getWindowHandles();
 			for (String handle : windowHandles) {

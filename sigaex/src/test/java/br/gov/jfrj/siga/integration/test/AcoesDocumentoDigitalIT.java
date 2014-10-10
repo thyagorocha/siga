@@ -12,8 +12,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import br.gov.jfrj.siga.page.objects.AnexoPage;
-import br.gov.jfrj.siga.page.objects.AssinaturaDigitalPage;
 import br.gov.jfrj.siga.page.objects.OperacoesDocumentoPage;
 import br.gov.jfrj.siga.page.objects.PortariaPage;
 import br.gov.jfrj.siga.page.objects.PrincipalPage;
@@ -46,7 +44,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 	public void paginaInicial(Method method) {
 		try {
 			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
-			if(!driver.getCurrentUrl().contains("exibir.action")) {
+			if(!driver.getCurrentUrl().contains("exibir.action") || driver.getTitle().contains("SIGA - Erro Geral")) {
 				System.out.println("Efetuando busca!");
 				driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);			
 			}
@@ -87,6 +85,5 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 	@AfterClass
 	public void tearDown() throws Exception {
 		efetuaLogout();
-		driver.quit();
 	}
 }

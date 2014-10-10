@@ -57,7 +57,7 @@ public class ApensacaoPage {
 		
 		try {
 			PesquisaDocumentoPage buscaPage = PageFactory.initElements(driver, PesquisaDocumentoPage.class);
-			codigoDocumentoApensado = buscaPage.buscarDocumento(codigoDocumento);		
+			codigoDocumentoApensado = buscaPage.buscarDocumento(codigoDocumento, propDocumentos.getProperty("situacaoDocumento"));		
 			System.out.println("WindowHandle size depois: " + driver.getWindowHandles().size());
 		} finally {
 			util.closePopup(driver);

@@ -58,11 +58,17 @@ public class IntegrationTestBase {
 	}
 	
 	public void efetuaLogout() {
-		IntegrationTestUtil util = new IntegrationTestUtil();
-		WebElement linkSair = util.getWebElement(driver, By.linkText("sair"));
-		new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(linkSair));
-		linkSair.click();
-		util.getWebElement(driver, By.id("j_username"));
+		try {			
+			IntegrationTestUtil util = new IntegrationTestUtil();
+			WebElement linkSair = util.getWebElement(driver, By.linkText("sair"));
+			new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(linkSair));
+			linkSair.click();
+			util.getWebElement(driver, By.id("j_username"));
+		} catch (Exception e) {
+			System.out.println("Erro ao efetuar logout!");
+		} finally {
+			driver.quit();
+		}
 	}
 	
 	public void assinarAnexo(String codigoDocumento) {

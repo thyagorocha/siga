@@ -47,7 +47,7 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	public void paginaInicial(Method method) {
 		try {
 			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
-			if(!driver.getTitle().equals("SIGA - Página Inicial")) {
+			if(!driver.getTitle().equals("SIGA - Página Inicial") || driver.getTitle().contains("SIGA - Erro Geral")) {
 				driver.get(baseURL + "/siga");
 			}
 		} catch(Exception e) {
@@ -108,6 +108,5 @@ public class CriacaoDocumentoIT extends IntegrationTestBase{
 	@AfterClass
 	public void tearDown() throws Exception {
 		efetuaLogout();
-		driver.quit();
 	}
 }

@@ -44,9 +44,11 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 			PrincipalPage principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
 			
-			principalPage.clicarBotaoNovoDocumentoEx();
+/*			principalPage.clicarBotaoNovoDocumentoEx();
 			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
-			oficioPage.criaOficio(propDocumentos);							
+			oficioPage.criaOficio(propDocumentos);		*/		
+			
+			codigoDocumento = "JFRJ-OFI-2014/00188";
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
@@ -57,7 +59,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	public void paginaInicial(Method method) {
 		try {
 			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
-			if(!driver.getCurrentUrl().contains("exibir.action")) {
+			if(!driver.getCurrentUrl().contains("exibir.action") || driver.getTitle().contains("SIGA - Erro Geral")) {
 				System.out.println("Efetuando busca!");
 				driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);				
 			}
@@ -291,6 +293,5 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	@AfterClass
 	public void tearDown() throws Exception {
 		efetuaLogout();
-		driver.quit();
 	}
 }
