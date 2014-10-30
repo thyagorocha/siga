@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import models.DadosRH;
+import models.SrSolicitacao;
 import models.DadosRH.Cargo;
 import models.DadosRH.Funcao;
 import models.DadosRH.Lotacao;
@@ -27,7 +28,7 @@ import org.w3c.dom.Element;
 import play.mvc.Controller;
 
 public class Corporativo extends SigaApplication {
-	public static void dadosrh() throws ParserConfigurationException {
+	public static void dadosrh(Long id) throws ParserConfigurationException {
 		Map<Long, Cargo> mc = new TreeMap<Long, Cargo>();
 		Map<Long, Lotacao> ml = new TreeMap<Long, Lotacao>();
 		Map<Long, Funcao> mf = new TreeMap<Long, Funcao>();
@@ -38,8 +39,9 @@ public class Corporativo extends SigaApplication {
 				.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-		List<DadosRH> l = DadosRH.all().fetch();
-		for (DadosRH d : l) {
+		//List<DadosRH> l = DadosRH.all().fetch();
+		List<DadosRH> li = DadosRH.find("from DadosRH where orgao_usu = " + id).fetch();
+		for (DadosRH d : li) {
 			Pessoa p = d.getPessoa();
 			if (p != null
 					&& !mp.containsKey(p.pessoa_id)
@@ -73,7 +75,10 @@ public class Corporativo extends SigaApplication {
 		// root elements
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement("base");
-		rootElement.setAttribute("orgaoUsuario", "RJ");
+		if (id == 1)
+			rootElement.setAttribute("orgaoUsuario", "RJ");
+		else if (id == 2)
+			rootElement.setAttribute("orgaoUsuario", "TRF");
 		rootElement.setAttribute("versao", "2"); // forcei a versao para testar
 		doc.appendChild(rootElement);
 

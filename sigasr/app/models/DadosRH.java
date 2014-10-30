@@ -55,8 +55,10 @@ public class DadosRH extends GenericModel {
 	public Long lotacao_id_pai;
 	public String lotacao_tipo;
 	public String lotacao_tipo_papel;
+	@Id
 	public Long papel_id;
-	public Long orgao_usu_id;
+	@Id
+	public Long orgao_usu;
 
 	public class Pessoa {
 		public Long pessoa_id;
@@ -218,7 +220,7 @@ public class DadosRH extends GenericModel {
 	
 	public Orgao getOrgao() {
 		Orgao org = new Orgao();
-		org.orgao_usu_id = orgao_usu_id;
+		org.orgao_usu_id = orgao_usu;
 		return org;
 	}
 

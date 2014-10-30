@@ -125,7 +125,8 @@ public class Application extends SigaApplication {
 
 	public void corporativo() {
 		try {
-			Corporativo.dadosrh();
+			Long id = 0L;
+			Corporativo.dadosrh(id);
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
