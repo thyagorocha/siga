@@ -124,7 +124,7 @@ public class ProcessoAdministrativoDigitalIT extends IntegrationTestBase {
 		
 		// Se o documento for digital, garantir que a String "Anexo Pendente de Assinatura/Conferência" apareça na tela
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + 
-				"[contains(text(), 'Anexo Pendente de Assinatura/Conferência')]")), "Texto 'Anexo Pendente de Assinatura/Conferência' não foi encontrado!");
+				"[contains(text(), 'Anexo Pendente de Assinatura/Conferência')]|//div[h3 = 'Volumes']/ul/li[contains(., 'Anexo Pendente de Assinatura/Conferência')]")), "Texto 'Anexo Pendente de Assinatura/Conferência' não foi encontrado!");
 		
 		// Clicar em "Visualizar Dossiê"
 		operacoesDocumentoPage.clicarLinkVisualizarDossie();

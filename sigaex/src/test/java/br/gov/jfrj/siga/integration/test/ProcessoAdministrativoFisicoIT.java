@@ -46,7 +46,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 			
 			operacoesDocumentoPage.clicarLinkAssinarDigitalmente();			
 			AssinaturaDigitalPage assinaturaDigitalPage = PageFactory.initElements(driver, AssinaturaDigitalPage.class);
-			assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);
+			assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);			
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
