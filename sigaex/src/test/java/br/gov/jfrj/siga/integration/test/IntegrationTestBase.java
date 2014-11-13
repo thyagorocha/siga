@@ -96,9 +96,13 @@ public class IntegrationTestBase {
 	}
 	
 	public void finalizarDocumento() {
-		operacoesDocumentoPage.clicarLinkFinalizar();
-		Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h3[1]")
-				.contains("Pendente de Assinatura, Como Subscritor"), "Texto Pendente de Assinatura, Como Subscritor não foi encontrado!");		
+		operacoesDocumentoPage.clicarLinkFinalizar();		
+		
+/*	Assert.assertTrue(operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h3[1]")
+			.contains("Pendente de Assinatura, Como Subscritor"), "Texto Pendente de Assinatura, Como Subscritor não foi encontrado!");		*/
+	
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + 
+				 "[contains(text(), 'Pendente de Assinatura, Como Subscritor')]|//div[h3 = 'Vias']/ul/li[contains(., 'Pendente de Assinatura') and contains(., 'Como Subscritor')]")), "Texto Pendente de Assinatura, Como Subscritor não foi encontrado!");		
 	}
 	
 	public void validaDesentranhamento(String codigoProcesso) {		
@@ -188,6 +192,6 @@ public class IntegrationTestBase {
 		assinaturaDigitalPage.registrarAssinaturaDigital(baseURL, codigoDocumento);
 		
 		// Garantir que "Aguardando Andamento" apareça na tela
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]|//div[h3 = 'Volumes']/ul/li[contains(., 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");					
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]|//div[h3 = 'Volumes' or h3 = 'Vias']/ul/li[contains(., 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");					
 	}	
 }

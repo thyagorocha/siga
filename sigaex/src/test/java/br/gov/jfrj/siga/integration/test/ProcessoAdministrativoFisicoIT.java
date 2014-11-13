@@ -172,13 +172,12 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 	public void criarVolume() {
 		// Clicar em "Abrir Novo Volume"
 		operacoesDocumentoPage.clicarLinkAbrirNovoVolume();
+						
+		// Garantir que os textos "1º Volume - Apensado" e "2º Volume - Aguardando Andamento" apareçam na tela	
+		WebElement volume1 = util.getWebElement(driver, By.xpath("//div[h3 = 'Volumes']/ul/li[1][contains(., 'Apensado')]"));
+		WebElement volume2 = util.getWebElement(driver, By.xpath("//div[h3 = 'Volumes']/ul/li[2][contains(., 'Aguardando Andamento')]"));
 		
-		// Garantir que os textos "1º Volume - Apensado" e "2º Volume - Aguardando Andamento" apareçam na tela
-		WebElement divVolumes = util.getContentDiv(driver, By.cssSelector("div.gt-sidebar-content"), "Volumes");		
-
-		Assert.assertNotNull(divVolumes, "Texto 'Volumes' não encontrado!");
-		Assert.assertTrue(divVolumes.getText().contains("V01  -  Apensado") && divVolumes.getText().contains("V02  -  Aguardando Andamento"),
-				"Textos 'V01  -  Apensado' e 'V02  -  Aguardando Andamento' não encontrados!");
+		Assert.assertTrue(volume1 != null && volume2 != null, "Textos 'V01  -  Apensado' e 'V02  -  Aguardando Andamento' não encontrados!");
 		
 		// Clicar sobre a segunda ocorrência do link "Despachar/Transferir"
 		operacoesDocumentoPage.clicarLinkDespacharTransferir();
@@ -187,16 +186,18 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 		TransferenciaPage transferenciaPage = PageFactory.initElements(driver, TransferenciaPage.class);
 		transferenciaPage.transferirDocumento(propDocumentos);
 		
-		// Garantir que os textos "1º Volume - Apensado" e "2º Volume - Caixa de Entrada (Digital)"
-		divVolumes = util.getContentDiv(driver, By.cssSelector("div.gt-sidebar-content"), "Volumes");	
-		Assert.assertTrue(divVolumes.getText().contains("V01  -  Apensado") && divVolumes.getText().contains("V02  -  A Receber (Físico)"),
-				"Textos 'V01  -  Apensado' e 'V02  -  Aguardando Andamento' não encontrados!");
+		// Garantir que os textos "1º Volume - Apensado" e "2º Volume - Caixa de Entrada (Digital)"		
+		volume1 = util.getWebElement(driver, By.xpath("//div[h3 = 'Volumes']/ul/li[1][contains(., 'Apensado')]"));
+		volume2 = util.getWebElement(driver, By.xpath("//div[h3 = 'Volumes']/ul/li[2][contains(., 'A Receber (Físico)')]"));
+		
+		Assert.assertTrue(volume1 != null && volume2 != null, "Textos 'V01  -  Apensado' e 'V02  -  A Receber (Físico)' não encontrados!");
 		
 		// Clicar em "Desfazer Transferência"
 		operacoesDocumentoPage.clicarLinkDesfazerTransferencia();
 		
 		// Garantir que "2º Volume - Aguardando Andamento" apareça na tela
-		util.getWebElement(driver, By.xpath("//h3[contains(text(), 'Volume - Aguardando Andamento')]"));
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[contains(text(), 'Volume - Aguardando Andamento')]|//div[h3 = 'Volumes']/ul/li[2][contains(., 'Aguardando Andamento')]")),
+				"'Texto 2º Volume - Aguardando Andamento' não encontrado!");
 	}
 	
 	@Test(enabled = true, priority = 6)

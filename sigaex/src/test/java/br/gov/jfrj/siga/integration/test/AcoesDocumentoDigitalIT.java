@@ -66,11 +66,12 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		//Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[2][contains(., 'Assinatura')]")), "Linha de registro da assinatura não encontrada!");
 	}
 	
-	@Test(enabled = true, priority = 1)
+	@Test(enabled = true, priority = 3)
 	public void anexarArquivo() {
 		super.anexarArquivo(propDocumentos.getProperty("arquivoAnexo"));
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Anexo Pendente de Assinatura/Conferência')]")), 
-				"Texto Anexo Pendente de Assinatura/Conferência não foi encontrado!");
+		
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + 
+				"[contains(text(), 'Anexo Pendente de Assinatura/Conferência')]|//div[h3 = 'Vias']/ul/li[contains(., 'Anexo Pendente de Assinatura/Conferência')]")), "Texto 'Anexo Pendente de Assinatura/Conferência' não foi encontrado!");		
 	}
 	
 	@Test(enabled = true, priority = 3)
