@@ -318,7 +318,7 @@ public class OperacoesDocumentoPage {
 	public void clicarLinkFinalizar() {
 		linkFinalizar.click();
 	    util.closeAlertAndGetItsText(driver);
-	    new WebDriverWait(driver, 15).until(ExpectedConditions.invisibilityOfElementLocated(By.linkText("Finalizar")));
+	    new WebDriverWait(driver, 30).until(ExpectedConditions.invisibilityOfElementLocated(By.linkText("Finalizar")));
 	}	
 	
 	public void clicarLinkAssinarCopia() {
