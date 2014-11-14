@@ -109,7 +109,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 		
 		// Clicar no link com o número do processo ao qual o documento foi juntado para retornar à visualização das movimentações do processo
 		util.getWebElement(driver, By.xpath("//tr[contains(@class, 'juntada ')]"));
-		util.getWebElement(driver, By.partialLinkText(codigoProcesso)).click();
+		util.getClickableElement(driver, By.partialLinkText(codigoProcesso)).click();
 		
 		// Clicar em "Visualizar Dossiê"
 		operacoesDocumentoPage.clicarLinkVisualizarDossie();
@@ -123,7 +123,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 	@Test(enabled = true, priority = 4)
 	public void cancelarJuntada() {
 		// Acessar o documento juntado, por meio do link existente no TR do evento de juntada
-		WebElement linkDocumentoJuntado = util.getWebElement(driver, By.partialLinkText(codigoDocumento));
+		WebElement linkDocumentoJuntado = util.getClickableElement(driver, By.partialLinkText(codigoDocumento));
 		linkDocumentoJuntado.click();
 		
 		// Clicar em "Desentranhar"

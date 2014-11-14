@@ -111,6 +111,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		Assert.assertNotNull(descricaoAnotacao, "Conteúdo da anotação não encontrado!");
 		WebElement linkExcluir = util.getWebElement(driver, descricaoAnotacao, By.linkText("Excluir"));
 		Assert.assertNotNull(linkExcluir, "Link para exclusão da anotação não encontrado!");
+		util.getClickableElement(driver, linkExcluir);
 		linkExcluir.click();
 		Assert.assertTrue(util.isElementInvisible(driver, By.xpath("//td[4][contains(., 'Teste de anotação')]")), "Anotação continua sendo exibida");
 	}
@@ -149,7 +150,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		for (i = 1; i < listItems.size(); i++) {
 			WebElement listItem = listItems.get(i);
 			if(!listItem.getText().contains("Cancelado")) {
-				listItem.findElement(By.tagName("a")).click();
+				util.getClickableElement(driver, listItem.findElement(By.tagName("a"))).click();
 				break;
 			}
 		}
@@ -213,7 +214,7 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkExibirInformacoesCompletas();
 		WebElement vinculacao = util.getWebElement(driver, By.xpath("//td[7][contains(., 'Ver também:')]"));
 		Assert.assertNotNull(vinculacao, "Texto 'Ver também:' não encontrado");
-		vinculacao.findElement(By.linkText("Cancelar")).click();
+		util.getClickableElement(driver, vinculacao.findElement(By.linkText("Cancelar"))).click();
 
 		CancelamentoMovimentacaoPage cancelamentoMovimentacaoPage = PageFactory.initElements(driver, CancelamentoMovimentacaoPage.class);
 		cancelamentoMovimentacaoPage.cancelarMovimentacao(propDocumentos);

@@ -62,6 +62,26 @@ public class IntegrationTestUtil {
 		return we;
 	}
 	
+	public WebElement getClickableElement(WebDriver driver, By option) {
+		WebElement we = null; 
+		try {
+			we = new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(option));	
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		return we;
+	}
+	
+	public WebElement getClickableElement(WebDriver driver, WebElement element) {
+		WebElement we = null; 
+		try {
+			we = new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element));	
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		return we;
+	}
+	
 	public Boolean isElementInvisible(WebDriver driver, By option) {
 		Boolean invisible = Boolean.FALSE;
 		

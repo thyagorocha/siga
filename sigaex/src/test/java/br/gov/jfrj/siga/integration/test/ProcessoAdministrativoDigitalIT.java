@@ -103,7 +103,7 @@ public class ProcessoAdministrativoDigitalIT extends IntegrationTestBase {
 	@Test(enabled = true, priority = 4)	
 	public void cancelarJuntada() {
 		// Acessar o documento juntado, por meio do link existente no TR do evento de juntada
-		WebElement linkDocumentoJuntado = util.getWebElement(driver, By.partialLinkText(codigoDocumento));
+		WebElement linkDocumentoJuntado = util.getClickableElement(driver, By.partialLinkText(codigoDocumento));
 		linkDocumentoJuntado.click();
 		
 		// Clicar em "Desentranhar"
