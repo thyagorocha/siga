@@ -86,7 +86,7 @@ public class IntegrationTestUtil {
 		Boolean invisible = Boolean.FALSE;
 		
 		try {
-			invisible = new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOfElementLocated(option));
+			invisible = new WebDriverWait(driver, 30).until(ExpectedConditions.invisibilityOfElementLocated(option));
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
@@ -98,7 +98,7 @@ public class IntegrationTestUtil {
 		WebElement we = null; 
 
 		try {
-			we = new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOf(element));
+			we = new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOf(element));
 		} catch(TimeoutException e) {
 			e.printStackTrace();
 		}
@@ -125,8 +125,8 @@ public class IntegrationTestUtil {
 	}
 	
 	public void closePopup(WebDriver driver) {	
-		// Esperando 5 segundos antes de fechar a popup
-		new WebDriverWait(driver, 5);
+		// Esperando 15 segundos antes de fechar a popup
+		new WebDriverWait(driver, 15);
 		if(driver.getWindowHandles().size() > 1) {
 			Set<String> windowHandles = driver.getWindowHandles();
 			for (String handle : windowHandles) {

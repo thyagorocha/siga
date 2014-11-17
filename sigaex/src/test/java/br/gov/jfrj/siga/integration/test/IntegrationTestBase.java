@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -45,7 +44,6 @@ public class IntegrationTestBase {
 	public void efetuaLogin() {
 		try {
 			driver = new InternetExplorerDriver();
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			driver.get(baseURL + "/siga");
 			driver.manage().window().maximize();
 			LoginPage loginPage = PageFactory.initElements(driver,	LoginPage.class);
@@ -61,7 +59,7 @@ public class IntegrationTestBase {
 		try {			
 			IntegrationTestUtil util = new IntegrationTestUtil();
 			WebElement linkSair = util.getWebElement(driver, By.linkText("sair"));
-			new WebDriverWait(driver, 15).until(ExpectedConditions.elementToBeClickable(linkSair));
+			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(linkSair));
 			linkSair.click();
 			util.getWebElement(driver, By.id("j_username"));
 		} catch (Exception e) {
@@ -177,7 +175,7 @@ public class IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkRegistrarAssinaturaManual();
 		RegistraAssinaturaManualPage registraAssinaturaManualPage = PageFactory.initElements(driver, RegistraAssinaturaManualPage.class);
 		registraAssinaturaManualPage.registarAssinaturaManual();
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]|//div[h3 = 'Volumes']/ul/li[contains(., 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");				
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]|//div[h3 = 'Volumes' or h3 = 'Vias']/ul/li[contains(., 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não encontrado!");				
 	}
 	
 	public void assinarDigitalmente(String codigoDocumento, String textoBuscado) {

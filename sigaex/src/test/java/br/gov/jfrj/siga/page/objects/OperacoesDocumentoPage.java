@@ -142,7 +142,7 @@ public class OperacoesDocumentoPage {
 			e.printStackTrace();
 		}
 
-		return (element != null ? element.getText() : "");
+		return (element != null ? element.getText().trim() : "");
 	}
 
 	public void excluirCossignatario() {
