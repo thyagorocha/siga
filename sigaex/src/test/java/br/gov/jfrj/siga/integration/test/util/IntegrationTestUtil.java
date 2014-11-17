@@ -125,12 +125,10 @@ public class IntegrationTestUtil {
 	}
 	
 	public void closePopup(WebDriver driver) {	
-		// Esperando 15 segundos antes de fechar a popup
-		new WebDriverWait(driver, 15);
 		if(driver.getWindowHandles().size() > 1) {
 			Set<String> windowHandles = driver.getWindowHandles();
 			for (String handle : windowHandles) {
-				if(!handle.contains(winHandle)) {
+				if(!handle.equals(winHandle)) {
 					driver.switchTo().window(handle); 	
 					driver.close();
 				}
@@ -172,6 +170,21 @@ public class IntegrationTestUtil {
 		      @Override
 		      public String toString() {
 		        return new String("Localizar a popup aberta!");
+		      }
+		    };
+	}
+	  
+	  public ExpectedCondition<Boolean> popupFechada() {
+		    return new ExpectedCondition<Boolean>() {
+		      @Override
+		      public Boolean apply(WebDriver driver) {
+		    	  System.out.println("Tamanho do WindowHandle: " + driver.getWindowHandles().size());
+		    	  return driver.getWindowHandles().size() == 1;
+		      }
+		      
+		      @Override
+		      public String toString() {
+		        return new String("Popup fechar automaticamente!");
 		      }
 		    };
 		  }

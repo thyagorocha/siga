@@ -297,7 +297,7 @@ public class OperacoesDocumentoPage {
 	}
 	
 	public void clicarCancelarVia() {
-		//WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//a[2][contains(text(),'Cancelar Via')])")));
+		//WebElement element = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//a[contains(text(),'Cancelar Via')])")));
 		linkCancelarVia.click();
 		util.closeAlertAndGetItsText(driver);
 	}

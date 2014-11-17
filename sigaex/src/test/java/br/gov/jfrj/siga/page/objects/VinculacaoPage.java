@@ -58,6 +58,7 @@ public class VinculacaoPage {
 			PesquisaDocumentoPage buscaPage = PageFactory.initElements(driver, PesquisaDocumentoPage.class);
 			codigoDocumentoVinculado =  buscaPage.buscarDocumento(codigoDocumento, propDocumentos.getProperty("situacaoDocumento"));		
 			System.out.println("WindowHandle size depois: " + driver.getWindowHandles().size());
+			new WebDriverWait(driver, 30).until(util.popupFechada());
 		} finally {
 			util.closePopup(driver);
 		}

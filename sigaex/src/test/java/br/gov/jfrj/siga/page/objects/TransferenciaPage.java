@@ -3,7 +3,6 @@ package br.gov.jfrj.siga.page.objects;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -62,6 +61,7 @@ public class TransferenciaPage {
 		util.openPopup(driver);		
 		try {
 			despachar(propDocumentos);
+			new WebDriverWait(driver, 30).until(util.popupFechada());
 		} finally {
 			util.closePopup(driver);
 		}
@@ -101,6 +101,7 @@ public class TransferenciaPage {
 			new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("lotaResponsavelSelSpan")));			
 			util.preencheElemento(driver, dataDevolucao, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 			botaoOk.click();
+			new WebDriverWait(driver, 30).until(util.popupFechada());
 		} finally {
 			util.closePopup(driver);
 		}
@@ -140,7 +141,6 @@ public class TransferenciaPage {
 		} finally {
 			util.closePopup(driver);
 		}
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.navigate().refresh();
 		
 		return codigoDocumentoJuntado;
