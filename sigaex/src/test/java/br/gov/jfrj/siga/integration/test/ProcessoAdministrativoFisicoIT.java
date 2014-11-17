@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -37,7 +38,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 			operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
 			PrincipalPage principalPage = PageFactory.initElements(driver, PrincipalPage.class);
 			principalPage.clicarBotaoNovoDocumentoEx();
-			
+
 			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
 			oficioPage.criaOficio(propDocumentos);		
 						
@@ -50,6 +51,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
+			throw new SkipException("Exceção no método setUp!");
 		}
 	}
 	
@@ -97,8 +99,9 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 	@Test(enabled = true, priority = 3)
 	public void juntar() {
 		// Acessar o documento anterior
-		PrincipalPage principalPage = PageFactory.initElements(driver, PrincipalPage.class);
-		principalPage.buscarDocumento(codigoDocumento);
+		driver.get(baseURL + "/sigaex/expediente/doc/exibir.action?sigla=" + codigoDocumento);	
+/*		PrincipalPage principalPage = PageFactory.initElements(driver, PrincipalPage.class);
+		principalPage.buscarDocumento(codigoDocumento);*/
 		
 		// Clicar em "Juntar"
 		operacoesDocumentoPage.clicarlinkJuntar();

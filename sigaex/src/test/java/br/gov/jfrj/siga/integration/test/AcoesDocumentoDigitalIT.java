@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -37,6 +38,7 @@ public class AcoesDocumentoDigitalIT extends IntegrationTestBase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
+			throw new SkipException("Exceção no método setUp!");
 		} 
 	}
 	

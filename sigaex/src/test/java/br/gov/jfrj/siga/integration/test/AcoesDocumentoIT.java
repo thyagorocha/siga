@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -46,11 +47,11 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 			
 			principalPage.clicarBotaoNovoDocumentoEx();
 			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
-			oficioPage.criaOficio(propDocumentos);				
-			
+			oficioPage.criaOficio(propDocumentos);								
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
+			throw new SkipException("Exceção no método setUp!");
 		} 
 	}
 	
@@ -234,15 +235,20 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 		operacoesDocumentoPage.clicarLinkApensar();
 		ApensacaoPage apensacaoPage = PageFactory.initElements(driver, ApensacaoPage.class);
 		String documentoApensado = apensacaoPage.apensarDocumento(propDocumentos, codigoDocumento);
-		WebElement documentosRelationados = util.getWebElement(driver, By.id("outputRelacaoDocs"));		
-		Assert.assertNotNull(documentosRelationados, "Área de Documentos Relacionados não foi encontrada!");
-		Assert.assertTrue(documentosRelationados.getText().contains(documentoApensado), "Código do documento apensado não foi encontrado!");
+		WebElement documentosRelacionados = util.getWebElement(driver, By.id("outputRelacaoDocs"));		
+		if(documentosRelacionados == null ) {
+			Assert.assertNotNull(util.getWebElement(driver, By.xpath("//h3[text() = 'Não é possível apensar a um documento não finalizado' or "
+					+ "text() = 'Não é possível apensar um volume aberto a um volume encerrado']")), "Documento não apensado e mensagem de erro esperada não encontrada!");
+		} else {
+		//Assert.assertNotNull(documentosRelacionados, "Área de Documentos Relacionados não foi encontrada!");
+		Assert.assertTrue(documentosRelacionados.getText().contains(documentoApensado), "Código do documento apensado não foi encontrado!");
 
 		operacoesDocumentoPage.clicarLinkDesapensar();
 		DesapensamentoPage desapensamentoPage = PageFactory.initElements(driver, DesapensamentoPage.class);
 		desapensamentoPage.desapensarDocumento(propDocumentos);
-		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
-		Assert.assertTrue(util.isElementInvisible(driver, By.id("outputRelacaoDocs")), "Área de Documentos Relacionados ainda está visível!");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath(OperacoesDocumentoPage.XPATH_STATUS_DOCUMENTO + "[contains(text(), 'Aguardando Andamento')]|//div[h3 = 'Vias']/ul/li[contains(., 'Aguardando Andamento')]")), "Texto 'Aguardando Andamento' não foi encontrado!");	
+		Assert.assertTrue(util.isElementInvisible(driver, By.id("outputRelacaoDocs")), "Área de Documentos Relacionados ainda está visível!");	
+		}
 	}
 	
 	@Test(enabled = true, priority = 4)
