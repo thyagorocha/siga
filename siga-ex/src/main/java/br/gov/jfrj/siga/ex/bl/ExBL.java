@@ -2246,7 +2246,7 @@ public class ExBL extends CpBL {
 		if (id == null)
 			throw new AplicacaoException("O usuário não está cadastrado.");
 		
-		subscritor = id.getDpPessoa();
+		subscritor = id.getDpPessoa().getPessoaAtual();
 
 		boolean senhaValida = id.getDscSenhaIdentidade().equals(hashAtual);
 		
@@ -2314,7 +2314,7 @@ public class ExBL extends CpBL {
 		if (id == null)
 			throw new AplicacaoException("O usuário não está cadastrado.");
 		
-		subscritor = id.getDpPessoa();
+		subscritor = id.getDpPessoa().getPessoaAtual();
 
 		boolean senhaValida = id.getDscSenhaIdentidade().equals(hashAtual);
 		
