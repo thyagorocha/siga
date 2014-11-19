@@ -2233,7 +2233,7 @@ public class ExBL extends CpBL {
 	public String assinarDocumentoComSenha(final DpPessoa cadastrante,
 			final DpLotacao lotaCadastrante, final ExDocumento doc,
 			final Date dtMov, final String matriculaSubscritor, final String senhaSubscritor, final DpPessoa titular)
-			throws AplicacaoException, NoSuchAlgorithmException {
+			throws Exception {
 		
 		DpPessoa subscritor = null;
 		
@@ -2264,6 +2264,9 @@ public class ExBL extends CpBL {
 		if (doc.isCancelado())
 			throw new AplicacaoException(
 					"Não é possível assinar um documento cancelado.");
+		
+		if (!getComp().podeAssinarComSenha(subscritor, subscritor.getLotacao(), doc.getMobilGeral()))
+			throw new AplicacaoException("Usuário não tem permissão de assinar documento com senha.");
 
 		String s = null;
 		try {
@@ -2336,6 +2339,10 @@ public class ExBL extends CpBL {
 			throw new AplicacaoException(
 					"Não é possível assinar uma movimentação cancelada.");
 		}
+		
+		
+		if (!getComp().podeAssinarComSenha(subscritor, subscritor.getLotacao(), doc.getMobilGeral()))
+			throw new AplicacaoException("Usuário não tem permissão de assinar documento com senha.");
 
 		// Verifica se a matrícula confere com o subscritor do Despacho ou
 		// do
