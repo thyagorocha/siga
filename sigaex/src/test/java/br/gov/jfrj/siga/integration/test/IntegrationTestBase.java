@@ -79,10 +79,10 @@ public class IntegrationTestBase {
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[4][contains(., 'Assinado por')]")), "O texto 'Assinado por' não foi encontrado!");
 	}
 	
-	public void autuar(Boolean isDigital){
+	public void autuar(Boolean isDigital, String modeloDocumento){
 		operacoesDocumentoPage.clicarLinkAutuar();
 		ProcessoFinanceiroPage processoFinanceiroPage = PageFactory.initElements(driver, ProcessoFinanceiroPage.class);
-		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos, isDigital);
+		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos, isDigital, modeloDocumento);
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//b[contains(., 'Processo Nº')]")), "Texto 'Processo Nº' não foi encontrado!");		
 	}
 	

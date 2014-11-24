@@ -75,7 +75,7 @@ public class ProcessoAdministrativoDigitalIT extends IntegrationTestBase {
 	
 	@Test(enabled = true)
 	public void autuar(){
-		super.autuar(Boolean.TRUE);
+		super.autuar(Boolean.TRUE, "Processo de Execução Orçamentária e Financeira");
 	}
 	
 	@Test(enabled = true, priority = 1)

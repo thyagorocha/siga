@@ -77,7 +77,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 	
 	@Test(enabled = true)
 	public void autuar(){
-		super.autuar(Boolean.FALSE);	
+		super.autuar(Boolean.FALSE, "Processo de Execução Orçamentária e Financeira");	
 	}
 	
 	@Test(enabled = true, priority = 1)
@@ -210,7 +210,7 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 		
 		// Selecionar um subscritor qualquer - Clicar "OK"
 		ProcessoFinanceiroPage processoFinanceiroPage = PageFactory.initElements(driver, ProcessoFinanceiroPage.class);
-		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos, Boolean.FALSE);
+		processoFinanceiroPage.criaProcessoFinanceiro(propDocumentos, Boolean.FALSE, "Processo de Execução Orçamentária e Financeira");
 		
 		// Clicar em Finalizar
 		operacoesDocumentoPage.clicarLinkFinalizar();
