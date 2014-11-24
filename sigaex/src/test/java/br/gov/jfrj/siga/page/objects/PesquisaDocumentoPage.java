@@ -1,6 +1,7 @@
 package br.gov.jfrj.siga.page.objects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -17,6 +18,15 @@ public class PesquisaDocumentoPage {
 	
 	@FindBy(id="descrDocumento")
 	private WebElement descricao;
+	
+	@FindBy(id="forma")
+	private WebElement tipo;
+	
+	@FindBy(id="tipoCadastrante")
+	private WebElement tipoCadastrante;
+	
+	@FindBy(id="lotaCadastranteSel_sigla")
+	private WebElement lotacaoCadastrante;
 	
 	@FindBy(xpath="//input[@value='Buscar']")
 	private WebElement botaoBuscar;
@@ -42,5 +52,16 @@ public class PesquisaDocumentoPage {
 		element.click();
 		
 		return codigoDocumentoApensado;
+	}
+	
+	public void buscaPortaria() {
+		util.getSelect(driver, situacao).selectByVisibleText("Aguardando Andamento");
+		util.getSelect(driver, tipo).selectByVisibleText("Portaria");
+		util.getSelect(driver, tipoCadastrante).selectByValue("2");
+		util.preencheElemento(driver, lotacaoCadastrante, "SESIA");
+		lotacaoCadastrante.sendKeys(Keys.TAB);
+		botaoBuscar.click();
+		
+		util.getClickableElement(driver, By.xpath("//td[1]/a")).click();
 	}
 }

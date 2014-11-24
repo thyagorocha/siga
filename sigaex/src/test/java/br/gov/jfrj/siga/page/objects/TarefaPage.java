@@ -32,6 +32,9 @@ public class TarefaPage {
 	@FindBy(name = "justificativa")
 	private WebElement justificativa;
 	
+	@FindBy(id = "doc_document_expedienteSel_sigla")
+	private WebElement documentoExpediente;
+	
 	@FindBy(name = "designar")
 	private WebElement botaoDesignar;
 	
@@ -68,6 +71,12 @@ public class TarefaPage {
 	}
 	
 	public void prosseguirTarefa() {
+		botaoProsseguir.click();
+	}
+	
+	public void prosseguirPagamento(String codigoDocumento) {
+		util.preencheElemento(driver, documentoExpediente, codigoDocumento);
+		documentoExpediente.sendKeys(Keys.TAB);
 		botaoProsseguir.click();
 	}
 }

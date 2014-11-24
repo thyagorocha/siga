@@ -2,6 +2,7 @@ package br.gov.jfrj.siga.integration.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -16,6 +17,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import br.gov.jfrj.siga.page.objects.OperacoesDocumentoPage;
+import br.gov.jfrj.siga.page.objects.PesquisaDocumentoPage;
 import br.gov.jfrj.siga.page.objects.PrincipalPage;
 import br.gov.jfrj.siga.page.objects.SolicitacaoEletronicaContratacaoPage;
 import br.gov.jfrj.siga.page.objects.TarefaPage;
@@ -37,7 +39,7 @@ public class WorkflowDigitalIT extends IntegrationTestBase {
 		operacoesDocumentoPage = PageFactory.initElements(driver, OperacoesDocumentoPage.class);
 	}
 	
-	@BeforeClass(enabled = true)
+	@BeforeClass(enabled = false)
 	public void solicitacaoEletronicaContratacao() {
 		try {
 			// No SIGA-DOC, criar documento: 
@@ -78,9 +80,13 @@ public class WorkflowDigitalIT extends IntegrationTestBase {
 	}
 	
 	@BeforeMethod(enabled = true)
-	public void paginaInicial() {
+	public void paginaInicial(Method method) {
 		try {
-			if(!driver.getCurrentUrl().contains("sigawf")) {
+			System.out.println("BeforeMethod: " + method.getName() + " - Titulo página: " + driver.getTitle());
+			
+			if(method.getName().equals("pagamento")) {
+				geraProcesso();
+			} else if(!driver.getCurrentUrl().contains("sigawf")) {
 				// Ir para a página inicial através do menu SIGA > Página Inicial
 				util.getWebElement(driver, By.linkText("SIGA")).sendKeys(Keys.ENTER);
 				util.getWebElement(driver, By.linkText("Página Inicial")).sendKeys(Keys.ENTER);
@@ -96,15 +102,15 @@ public class WorkflowDigitalIT extends IntegrationTestBase {
 			throw new SkipException("Exceção no método paginaInicial!");
 		}
 	}
-				
-	@Test(enabled = true, priority = 1)
+		
+	@Test(enabled = false, priority = 1)
 	public void comentario() {
 		tarefaPage.adicionarComentario(propDocumentos);
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[text() = '" + propDocumentos.getProperty("comentario") +"']")), 
 				"Texto '" + propDocumentos.getProperty("comentario") + "' não encontrado!");
 	}
 	
-	@Test(enabled = true, priority = 1)
+	@Test(enabled = false, priority = 1)
 	public void designacaoTarefa() {
 		// Deletar a pessoa e deixar somente a lotação - Alterar a prioridade para Alta - Clicar em Designar
 		tarefaPage.designarTarefaLotacao(propDocumentos);	
@@ -130,8 +136,8 @@ public class WorkflowDigitalIT extends IntegrationTestBase {
 		Assert.assertTrue(util.isElementInvisible(driver, By.xpath("//input[@value='Pegar tarefa para mim']")), "Botão 'Pegar tarefa para mim' ainda está sendo exibido!");
 	}
 	
-	@Test(enabled = true, priority = 2)
-	public void execucaoTarefa() {	
+	@Test(enabled = false, priority = 2)
+	public void execucaoTarefaSigaDoc() {	
 		util.getClickableElement(driver, By.partialLinkText(codigoDocumento)).click();
 		
 		// Clicar em Prosseguir
@@ -148,14 +154,11 @@ public class WorkflowDigitalIT extends IntegrationTestBase {
 		// Clicar no link do documento
 		WebElement procedimento = util.getWebElement(driver, By.xpath("//td[contains(.,'Procedimento: Contratação: fase de análise')]"));
 		inicioTarefa = procedimento.getText().substring(procedimento.getText().indexOf("(") + 1, procedimento.getText().indexOf(")"));
-		
-		util.getWebElement(driver, By.linkText("SIGA")).sendKeys(Keys.ENTER);
-		util.getWebElement(driver, By.linkText("Página Inicial")).sendKeys(Keys.ENTER);
-		util.getWebElement(driver, By.cssSelector("a.gt-btn-small.gt-btn-right"));	
-		
-		WebElement linkTarefa = util.getWebElement(driver, By.xpath("//div[h2 = 'Tarefas']//tbody/tr[td[1]/a[text() = 'Verificar programação anual'] and td[last()][contains(., '" + inicioTarefa +"')]]/td/a"));
-		linkTarefa.click();
-		
+		descricaoTarefa = "Verificar programação anual";		
+	}
+	
+	@Test(enabled = false, priority = 3)
+	public void execucaoTarefaWorkflow() {		
 		// Clicar em Sim
 		util.getClickableElement(driver, By.xpath("//input[contains(@value, 'Sim')]")).click();
 		
@@ -166,8 +169,74 @@ public class WorkflowDigitalIT extends IntegrationTestBase {
 		// Garantir que o link "Retificar SEC" e "Prosseguir" apareçam na tela		
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//input[contains(@value, 'Retificar SEC')]")), "Botão 'Retificar SEC' não encontrado!");
 		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//input[contains(@value, 'Prosseguir')]")), "Botão 'Prosseguir' não encontrado!");
+		
+		// 
+		String inicio = util.getWebElement(driver, By.xpath("//div[h3 = 'Dados da Tarefa']//p[contains(.,'Início:')]")).getText();
+		inicioTarefa = inicio.substring(inicio.indexOf(":") + 1, inicio.length()).trim();
+		descricaoTarefa = "Realizar cotação";
 	}
 	
+	@Test(enabled = true, priority = 4)
+	public void pagamento() {
+		// Ir para a módulo workflow através do menu SIGA > Módulos > Workflow
+		util.getWebElement(driver, By.linkText("SIGA")).sendKeys(Keys.ENTER);
+		util.getWebElement(driver, By.linkText("Módulos")).sendKeys(Keys.ENTER);
+		util.getWebElement(driver, By.linkText("Workflow")).sendKeys(Keys.ENTER);
+		
+		// Ir no menu Procedimentos > Iniciar > Pagamento
+		util.getWebElement(driver, By.linkText("Procedimentos")).sendKeys(Keys.ENTER);
+		util.getWebElement(driver, By.linkText("Iniciar")).sendKeys(Keys.ENTER);
+		util.getWebElement(driver, By.linkText("Pagamento")).sendKeys(Keys.ENTER);
+		
+		// Colar a sigla copiada no campo de Execução da Tarefa
+		// Clicar em prosseguir
+		tarefaPage.prosseguirPagamento(codigoDocumento);
+		
+		// Garantir que "Tarefa: É registro de preços - pagamento" apareça na tela
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//div[h3 = 'Dados da Tarefa']//p[contains(.,'Tarefa: É registro de preços - pagamento')]")),
+				"'Tarefa:  É registro de preços - pagamento' não encontrada!");
+		
+		// Garantir que os botões "Sim" e "Não" apareçam na tela
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//input[contains(@value, 'Sim') and @type = 'submit']")), "Botão 'Sim' não encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//input[contains(@value, 'Nao') and @type = 'submit']")), "Botão 'Não' não encontrado!");
+		
+		// Clicar no link da sigla do Processo
+		util.getClickableElement(driver, By.partialLinkText(codigoDocumento)).click();
+		
+		// Garantir que "Tarefa: É registro de preços - pagamento" apareça na tela
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//td[contains(.,'Tarefa: É registro de preços - pagamento')]")),
+				"'Tarefa: É registro de preços - pagamento' não encontrada!");
+		
+		// Garantir que os botões "Sim" e "Não" apareçam na tela
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//a[contains(text(), 'Sim »')]")), "Link 'Sim' não encontrado!");
+		Assert.assertNotNull(util.getWebElement(driver, By.xpath("//a[contains(text(), 'Nao »')]")), "Link 'Não' não encontrado!");
+		
+		WebElement procedimento = util.getWebElement(driver, By.xpath("//td[contains(.,'Procedimento: Pagamento')]"));
+		inicioTarefa = procedimento.getText().substring(procedimento.getText().indexOf("(") + 1, procedimento.getText().indexOf(")"));
+		descricaoTarefa = "É registro de preços - pagamento";
+	}
+	
+	public void geraProcesso() {
+		// Ir no menu Documento > Pesquisar
+		util.getWebElement(driver, By.linkText("SIGA")).sendKeys(Keys.ENTER);
+		util.getWebElement(driver, By.linkText("Módulos")).sendKeys(Keys.ENTER);
+		util.getWebElement(driver, By.linkText("Documentos")).sendKeys(Keys.ENTER);
+		
+		// Situação: aguardando andamento - Tipo: Portaria - Clicar em "buscar"
+		PesquisaDocumentoPage pesquisaDocumentoPage = PageFactory.initElements(driver, PesquisaDocumentoPage.class);
+		pesquisaDocumentoPage.buscaPortaria();
+		
+		// Clicar em "autuar"	
+		// Preencher subscritor - Alterar Modelo para: "Contrato com Exclusividade" - Clicar em Ok
+		super.autuar(Boolean.TRUE, "Contrato com Exclusividade");
+		
+		// Finalizar e assinar Processo criado
+		operacoesDocumentoPage.clicarLinkFinalizar();
+		// Assinar Digitalmente (simular assinatura)
+		codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
+		assinarDigitalmente(codigoDocumento, propDocumentos.getProperty("descricao"));
+	}	
+			
 	@AfterClass
 	public void tearDown() throws Exception {
 		efetuaLogout();
