@@ -104,7 +104,7 @@ public class EditaDocumentoPage {
 		}
 	}
 		
-	public void preencheDocumento(String origemDocumento, Boolean isDigital, Properties propDocumentos) {		
+	public void preencheDocumento(String origemDocumento, Boolean isDigital, Boolean hasClassificacao, Properties propDocumentos) {		
 		if(isDigital) {
 			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(digital));
 			digital.click();			
@@ -116,14 +116,16 @@ public class EditaDocumentoPage {
 		util.preencheElemento(driver,dataDocumento, new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()));
 		preencheTipoDestinatario(propDocumentos.getProperty("tipoDestinatarioCriacao"), propDocumentos.getProperty("siglaDestinatarioCriacao"));
 		util.preencheElemento(driver,funcaoLotacaoLocalidade, propDocumentos.getProperty("funcaoLocalidade"));
-		util.preencheElemento(driver,classificacao, propDocumentos.getProperty("classificacao"));
-		dataDocumento.click();
-		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("classificacaoSelSpan")));
+		if(hasClassificacao) {
+			util.preencheElemento(driver,classificacao, propDocumentos.getProperty("classificacao"));
+			dataDocumento.click();
+			new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("classificacaoSelSpan")));	
+		}
 		util.preencheElemento(driver,descricao,  propDocumentos.getProperty("descricao"));	
 	}
 
-	public void preencheDocumentoInterno(Properties propDocumentos, String origemDocumento, Boolean isDigital) {
-		preencheDocumento(origemDocumento, isDigital, propDocumentos);
+	public void preencheDocumentoInterno(Properties propDocumentos, String origemDocumento, Boolean isDigital, Boolean hasClassificacao) {
+		preencheDocumento(origemDocumento, isDigital, hasClassificacao, propDocumentos);
 		util.preencheElemento(driver,siglaSubscritor, propDocumentos.getProperty("siglaSubscritor"));
 		descricao.click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
@@ -136,17 +138,24 @@ public class EditaDocumentoPage {
 		descricao.click();	
 	}
 	
+	public void selectTipoDocumento(String tipoDocumento, Integer valueModeloDocumento) {
+		util.getSelect(driver,tipo).selectByVisibleText(tipoDocumento);
+		descricao.click();
+		util.getSelect(driver,modelo).selectByValue(valueModeloDocumento.toString());
+		descricao.click();	
+	}
+	
 	public void preencheDocumentoInternoSemModelo(Properties propDocumentos, String tipoDocumento, String origemDocumento, Boolean isDigital) {
 		util.getSelect(driver,tipo).selectByVisibleText(tipoDocumento);
 		descricao.click();
-		preencheDocumento(origemDocumento, isDigital, propDocumentos);
+		preencheDocumento(origemDocumento, isDigital, Boolean.TRUE, propDocumentos);
 		util.preencheElemento(driver,siglaSubscritor, propDocumentos.getProperty("siglaSubscritor"));
 		descricao.click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
 	}	
 	
 	public void preencheDocumentoExterno(Properties propDocumentos) {
-		preencheDocumento(propDocumentos.getProperty("externo"), Boolean.TRUE, propDocumentos);
+		preencheDocumento(propDocumentos.getProperty("externo"), Boolean.TRUE, Boolean.TRUE, propDocumentos);
 		util.preencheElemento(driver,dataOriginalDocumento, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver,numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
 		util.preencheElemento(driver,orgao, propDocumentos.getProperty("orgao"));
@@ -159,7 +168,7 @@ public class EditaDocumentoPage {
 		
 	public void preencheDocumentoInternoImportado(Properties propDocumentos) {	
 		selectTipoDocumento("Memorando", "Memorando");
-		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoImportado"), Boolean.TRUE);
+		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoImportado"), Boolean.TRUE, Boolean.TRUE);
 		util.preencheElemento(driver, numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
 		botaoOk.click();
 	}

@@ -17,7 +17,7 @@ public class PortariaPage extends EditaDocumentoPage{
 	
 	public void criaPortaria(Properties propDocumentos) {
 		selectTipoDocumento("Portaria", "Portaria");
-		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoProduzido"), Boolean.TRUE);
+		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoProduzido"), Boolean.TRUE, Boolean.TRUE);
 		util.preencheElemento(driver, dispoeSobre, propDocumentos.getProperty("dispoeSobre"));
 		botaoOk.click();
 	}

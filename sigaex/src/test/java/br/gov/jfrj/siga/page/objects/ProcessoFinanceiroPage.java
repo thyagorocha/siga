@@ -12,7 +12,7 @@ public class ProcessoFinanceiroPage extends EditaDocumentoPage {
 	
 	public void criaProcessoFinanceiro(Properties propDocumentos, Boolean isDigital) {
 		selectTipoDocumento("Processo de Execução Orçamentária e Financeira", "Processo de Execução Orçamentária e Financeira");
-		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoProduzido"), isDigital);
+		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoProduzido"), isDigital, Boolean.TRUE);
 		botaoOk.click();
 	}
 
