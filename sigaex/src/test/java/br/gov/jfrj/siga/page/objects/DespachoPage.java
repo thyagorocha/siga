@@ -13,7 +13,8 @@ public class DespachoPage extends EditaDocumentoPage {
 	}
 	
 	public void criarDespacho(Properties propDocumentos, Boolean isDigital) {
-		preencheDocumentoInternoSemModelo(propDocumentos, "Despacho", propDocumentos.getProperty("internoProduzido"), isDigital);
+		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("internoProduzido"));
+		preencheDocumentoInternoSemModelo(propDocumentos, "Despacho", isDigital);
 		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(botaoOk));
 		botaoOk.click();
 	}

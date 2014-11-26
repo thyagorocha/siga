@@ -37,11 +37,12 @@ public class OficioPage extends EditaDocumentoPage {
 	}
 	
 	public void criaOficio(Properties propDocumentos) {
+		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("internoProduzido"));
 		selectTipoDocumento("Ofício", "Ofício");
 		util.isElementVisible(driver, tableCkEditor);
 		// Garantindo que o processo de abrir o ckEditor não faça a página perder o foco 
 		tableCkEditor.click();
-		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoProduzido"), Boolean.FALSE, Boolean.TRUE);
+		preencheDocumentoInterno(propDocumentos, Boolean.FALSE, Boolean.TRUE);
 		util.getSelect(driver, tipoAutoridade).selectByVisibleText(propDocumentos.getProperty("tipoAutoridade"));
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div/div/form/table/tbody/tr[14]/td/span/div[1]/table/tbody/tr/td/div/table/tbody/tr/td/div/table/tbody/tr/td/span/b")));		
 		util.getSelect(driver, generoAutoridade).selectByVisibleText(propDocumentos.getProperty("generoAutoridade"));		

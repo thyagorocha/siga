@@ -104,7 +104,7 @@ public class EditaDocumentoPage {
 		}
 	}
 		
-	public void preencheDocumento(String origemDocumento, Boolean isDigital, Boolean hasClassificacao, Properties propDocumentos) {		
+	public void preencheDocumento(Boolean isDigital, Boolean hasClassificacao, Properties propDocumentos) {		
 		if(isDigital) {
 			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(digital));
 			digital.click();			
@@ -112,7 +112,6 @@ public class EditaDocumentoPage {
 			new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(fisico));
 			fisico.click();
 		}
-		util.getSelect(driver, origem).selectByVisibleText(origemDocumento);
 		util.preencheElemento(driver,dataDocumento, new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()));
 		preencheTipoDestinatario(propDocumentos.getProperty("tipoDestinatarioCriacao"), propDocumentos.getProperty("siglaDestinatarioCriacao"));
 		util.preencheElemento(driver,funcaoLotacaoLocalidade, propDocumentos.getProperty("funcaoLocalidade"));
@@ -124,8 +123,8 @@ public class EditaDocumentoPage {
 		util.preencheElemento(driver,descricao,  propDocumentos.getProperty("descricao"));	
 	}
 
-	public void preencheDocumentoInterno(Properties propDocumentos, String origemDocumento, Boolean isDigital, Boolean hasClassificacao) {
-		preencheDocumento(origemDocumento, isDigital, hasClassificacao, propDocumentos);
+	public void preencheDocumentoInterno(Properties propDocumentos, Boolean isDigital, Boolean hasClassificacao) {
+		preencheDocumento(isDigital, hasClassificacao, propDocumentos);
 		util.preencheElemento(driver,siglaSubscritor, propDocumentos.getProperty("siglaSubscritor"));
 		descricao.click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
@@ -145,17 +144,18 @@ public class EditaDocumentoPage {
 		descricao.click();	
 	}
 	
-	public void preencheDocumentoInternoSemModelo(Properties propDocumentos, String tipoDocumento, String origemDocumento, Boolean isDigital) {
+	public void preencheDocumentoInternoSemModelo(Properties propDocumentos, String tipoDocumento, Boolean isDigital) {
 		util.getSelect(driver,tipo).selectByVisibleText(tipoDocumento);
 		descricao.click();
-		preencheDocumento(origemDocumento, isDigital, Boolean.TRUE, propDocumentos);
+		preencheDocumento(isDigital, Boolean.TRUE, propDocumentos);
 		util.preencheElemento(driver,siglaSubscritor, propDocumentos.getProperty("siglaSubscritor"));
 		descricao.click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.id("subscritorSelSpan")));
 	}	
 	
 	public void preencheDocumentoExterno(Properties propDocumentos) {
-		preencheDocumento(propDocumentos.getProperty("externo"), Boolean.TRUE, Boolean.TRUE, propDocumentos);
+		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("externo"));
+		preencheDocumento(Boolean.TRUE, Boolean.TRUE, propDocumentos);
 		util.preencheElemento(driver,dataOriginalDocumento, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver,numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
 		util.preencheElemento(driver,orgao, propDocumentos.getProperty("orgao"));
@@ -167,8 +167,9 @@ public class EditaDocumentoPage {
 	}
 		
 	public void preencheDocumentoInternoImportado(Properties propDocumentos) {	
+		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("internoImportado"));
 		selectTipoDocumento("Memorando", "Memorando");
-		preencheDocumentoInterno(propDocumentos, propDocumentos.getProperty("internoImportado"), Boolean.TRUE, Boolean.TRUE);
+		preencheDocumentoInterno(propDocumentos, Boolean.TRUE, Boolean.TRUE);
 		util.preencheElemento(driver, numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
 		botaoOk.click();
 	}
