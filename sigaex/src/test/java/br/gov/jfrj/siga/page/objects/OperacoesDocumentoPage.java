@@ -54,7 +54,7 @@ public class OperacoesDocumentoPage {
 	@FindBy(linkText="Registrar Assinatura Manual")
 	private WebElement linkRegistrarAssinaturaManual;
 	
-	@FindBy(linkText="Assinar Digitalmente")
+	@FindBy(linkText="Assinar")
 	private WebElement linkAssinarDigitalmente;
 	
 	@FindBy(linkText="Solicitar Publicação no Boletim")
@@ -286,11 +286,7 @@ public class OperacoesDocumentoPage {
 		util.openPopup(driver);
 		
 		try {		
-			if(driver.getPageSource().equals("")) {
-				return true;
-			} else {
-				return false;
-			}
+			return util.isPDF(driver);
 		} finally {
 			util.closePopup(driver);
 		}		
