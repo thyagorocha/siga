@@ -298,6 +298,6 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 	
 	@AfterClass
 	public void tearDown() throws Exception {
-		efetuaLogout();
+		driver.quit();
 	}
 }

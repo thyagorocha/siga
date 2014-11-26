@@ -221,6 +221,6 @@ public class ProcessoAdministrativoFisicoIT extends IntegrationTestBase {
 	
 	@AfterClass
 	public void tearDown() throws Exception {
-		efetuaLogout();
+		driver.quit();
 	}
 }
