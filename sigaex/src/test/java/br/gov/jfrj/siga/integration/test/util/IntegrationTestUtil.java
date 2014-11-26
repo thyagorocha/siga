@@ -45,7 +45,7 @@ public class IntegrationTestUtil {
 	public WebElement getWebElement(WebDriver driver, By option) {
 		WebElement we = null; 
 		try {
-			we = new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(option));	
+			we = new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(option));	
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
@@ -120,6 +120,7 @@ public class IntegrationTestUtil {
 			}
 		}		
 		
+		new WebDriverWait(driver, 5);
 		driver.manage().window().maximize();		
 		return driver;
 	}
@@ -143,6 +144,14 @@ public class IntegrationTestUtil {
 		String alertText = alert.getText();
 		alert.accept();
 		return alertText;
+	}
+	
+	public Boolean isPDF(WebDriver driver) {
+		if(driver.getPageSource().equals("")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	  public ExpectedCondition<Boolean> trocaURL(final String URL) {
