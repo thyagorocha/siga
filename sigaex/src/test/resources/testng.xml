@@ -14,4 +14,10 @@
 			<class name="br.gov.jfrj.siga.integration.test.ProcessoAdministrativoDigitalIT"/>
 		</classes>
 	</test>
+	
+	<test name="SigaDoc - Workflow">
+		<classes>
+			<class name="br.gov.jfrj.siga.integration.test.WorkflowDigitalIT" />
+		</classes>
+	</test>
 </suite>
