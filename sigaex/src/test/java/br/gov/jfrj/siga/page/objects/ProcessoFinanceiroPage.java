@@ -11,7 +11,7 @@ public class ProcessoFinanceiroPage extends EditaDocumentoPage {
 	}
 	
 	public void criaProcessoFinanceiro(Properties propDocumentos, Boolean isDigital, String modeloDocumento) {
-		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("internoProduzido"));
+		preencheOrigem(propDocumentos.getProperty("internoProduzido"));
 		selectTipoDocumento("Processo de Execução Orçamentária e Financeira", modeloDocumento);
 		preencheDocumentoInterno(propDocumentos, isDigital, Boolean.TRUE);
 		botaoOk.click();

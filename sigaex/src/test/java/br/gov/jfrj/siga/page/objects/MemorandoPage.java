@@ -19,7 +19,7 @@ public class MemorandoPage extends EditaDocumentoPage {
 	}
 	
 	public void criaMemorando(Properties propDocumentos) {
-		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("internoProduzido"));
+		preencheOrigem(propDocumentos.getProperty("internoProduzido"));
 		selectTipoDocumento("Memorando", "Memorando");
 		util.isElementVisible(driver, tableCkEditor);
 		preencheDocumentoInterno(propDocumentos, Boolean.TRUE, Boolean.TRUE);	

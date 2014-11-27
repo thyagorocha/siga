@@ -154,7 +154,7 @@ public class EditaDocumentoPage {
 	}	
 	
 	public void preencheDocumentoExterno(Properties propDocumentos) {
-		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("externo"));
+		preencheOrigem(propDocumentos.getProperty("externo"));
 		preencheDocumento(Boolean.TRUE, Boolean.TRUE, propDocumentos);
 		util.preencheElemento(driver,dataOriginalDocumento, new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime()));
 		util.preencheElemento(driver,numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
@@ -167,10 +167,22 @@ public class EditaDocumentoPage {
 	}
 		
 	public void preencheDocumentoInternoImportado(Properties propDocumentos) {	
-		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("internoImportado"));
+		preencheOrigem(propDocumentos.getProperty("internoImportado"));
+		util.isElementVisible(driver, botaoOk);
 		selectTipoDocumento("Memorando", "Memorando");
 		preencheDocumentoInterno(propDocumentos, Boolean.TRUE, Boolean.TRUE);
 		util.preencheElemento(driver, numeroOriginal, propDocumentos.getProperty("numeroOriginal"));
 		botaoOk.click();
+	}
+	
+	public void preencheOrigem(String origemDocumento) {
+		util.getSelect(driver,origem).selectByVisibleText(origemDocumento);
+		if(origemDocumento.equals("Externo")) {
+			util.isElementVisible(driver, dataOriginalDocumento);
+		} else if(origemDocumento.equals("Interno Importado"))  {
+			util.isElementVisible(driver, numeroAntigo);
+		} else {
+			util.isElementInvisible(driver, By.id("frm_numAntigoDoc"));
+		}
 	}
 }

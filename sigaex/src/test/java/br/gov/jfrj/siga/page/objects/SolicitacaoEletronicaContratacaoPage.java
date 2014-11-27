@@ -17,7 +17,7 @@ public class SolicitacaoEletronicaContratacaoPage extends EditaDocumentoPage {
 	}
 	
 	public void criaSolicitacaoEletronicaContratacao(Properties propDocumentos) {
-		util.getSelect(driver, origem).selectByVisibleText(propDocumentos.getProperty("internoProduzido"));
+		preencheOrigem(propDocumentos.getProperty("internoProduzido"));
 		selectTipoDocumento("Solicitação Eletrônica de Contratação", 599);
 		preencheDocumentoInterno(propDocumentos, Boolean.TRUE, Boolean.FALSE);
 		programacaoAnual.get(0).click();
