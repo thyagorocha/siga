@@ -44,9 +44,10 @@ public class OficioPage extends EditaDocumentoPage {
 		tableCkEditor.click();
 		preencheDocumentoInterno(propDocumentos, Boolean.FALSE, Boolean.TRUE);
 		util.getSelect(driver, tipoAutoridade).selectByVisibleText(propDocumentos.getProperty("tipoAutoridade"));
+		descricao.click();
 		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div/div/form/table/tbody/tr[14]/td/span/div[1]/table/tbody/tr/td/div/table/tbody/tr/td/div/table/tbody/tr/td/span/b")));		
 		util.getSelect(driver, generoAutoridade).selectByVisibleText(propDocumentos.getProperty("generoAutoridade"));
-		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div/div/form/table/tbody/tr[14]/td/span/div[1]/table/tbody/tr/td/div/table/tbody/tr/td/div/table/tbody/tr/td/span/b")));
+		descricao.click();
 		util.preencheElemento(driver, enderecoDestinatario, propDocumentos.getProperty("enderecoDestinatario"));
 		botaoOk.click();
 	}

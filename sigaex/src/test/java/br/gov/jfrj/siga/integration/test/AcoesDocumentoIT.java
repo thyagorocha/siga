@@ -47,7 +47,8 @@ public class AcoesDocumentoIT extends IntegrationTestBase {
 			
 			principalPage.clicarBotaoNovoDocumentoEx();
 			OficioPage oficioPage = PageFactory.initElements(driver, OficioPage.class);
-			oficioPage.criaOficio(propDocumentos);								
+			oficioPage.criaOficio(propDocumentos);			
+			codigoDocumento = operacoesDocumentoPage.getTextoVisualizacaoDocumento("/html/body/div[4]/div/h2");
 		} catch (Exception e) {
 			e.printStackTrace();
 			driver.quit();
