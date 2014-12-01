@@ -6,14 +6,7 @@
   <artifactId>Qrcode</artifactId>
   <version>1.0.0</version>
   <description>POM was created from install:install-file</description>
-
-  <distributionManagement>
-	<repository>
-		<id>siga-repo</id>
-		<name>Repositorio do SIGA</name>
-		<url>http://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
-	</repository>
-</distributionManagement>
-
- 
+	<dependencies>
+		
+	</dependencies>
 </project>
