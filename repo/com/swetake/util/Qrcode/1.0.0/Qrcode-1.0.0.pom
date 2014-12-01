@@ -5,8 +5,4 @@
   <groupId>com.swetake.util</groupId>
   <artifactId>Qrcode</artifactId>
   <version>1.0.0</version>
-  <description>POM was created from install:install-file</description>
-	<dependencies>
-		
-	</dependencies>
 </project>
