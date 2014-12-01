@@ -150,11 +150,11 @@
      		<id>ZK PE/EE Evaluation</id>
     		<url>http://mavensync.zkoss.org/eval/</url>
    		</repository>
-        <repository>
-     		<id>Repositório do siga</id>
-    		<url>https://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
-   		</repository>
-    </repositories>
+		 <repository>
+				<id>siga-repo</id>
+				<url>http://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
+		 </repository>
+ </repositories>
 
     <dependencyManagement>
         <dependencies>
