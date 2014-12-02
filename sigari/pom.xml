@@ -319,6 +319,12 @@
         	</plugins>
         </pluginManagement>
     </build>
+    <repositories>
+		 <repository>
+				<id>siga-repo</id>
+				<url>https://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
+		 </repository>
+	</repositories>
 
 
 <properties>
