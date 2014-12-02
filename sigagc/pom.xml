@@ -145,11 +145,6 @@
                   <artifactId>opencloud</artifactId>
                   <version>0.3</version>
                 </dependency>
-                <dependency>
-                    <groupId>ys.wikiparser</groupId>
-                    <artifactId>WikiParser</artifactId>
-                    <version>1.0.0</version>
-                </dependency>
                 
         </dependencies>
 

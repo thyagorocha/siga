@@ -135,7 +135,7 @@
                 </dependency>
                 <dependency>
                     <groupId>ys.wikiparser</groupId>
-                    <artifactId>WikiParser</artifactId>
+                    <artifactId>WikiParser-siga</artifactId>
                     <version>1.0.0</version>
                 </dependency>
                 
