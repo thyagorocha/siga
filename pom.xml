@@ -126,6 +126,10 @@
         </plugins>
     </build>
     <repositories>
+		 <repository>
+				<id>siga-repo</id>
+				<url>https://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
+		 </repository>
         <repository>
             <id>JBoss Thirdparty Releases</id>
             <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
@@ -150,10 +154,6 @@
      		<id>ZK PE/EE Evaluation</id>
     		<url>http://mavensync.zkoss.org/eval/</url>
    		</repository>
-		 <repository>
-				<id>siga-repo</id>
-				<url>https://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
-		 </repository>
  </repositories>
 
     <dependencyManagement>
