@@ -152,7 +152,7 @@
    		</repository>
 		 <repository>
 				<id>siga-repo</id>
-				<url>http://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
+				<url>https://raw.githubusercontent.com/projeto-siga/siga/mvn-repo/repo/</url>
 		 </repository>
  </repositories>
 
