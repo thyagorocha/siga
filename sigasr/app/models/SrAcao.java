@@ -28,7 +28,7 @@ import br.gov.jfrj.siga.model.Assemelhavel;
 @Entity
 @Table(name = "SR_ACAO", schema = "SIGASR")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class SrAcao extends HistoricoSuporte implements SrSelecionavel, Comparable<SrAcao> {
+public class SrAcao extends HistoricoSuporte implements SrAutocompleteHierarquico, Comparable<SrAcao> {
 	
 	/**
 	 * 
@@ -109,11 +109,6 @@ public class SrAcao extends HistoricoSuporte implements SrSelecionavel, Comparab
 		return tituloAcao;
 	}
 
-	@Override
-	public void setDescricao(String descricao) {
-		this.tituloAcao = descricao;
-	}
-
 	public List<SrAcao> getHistoricoAcao() {
 		if (acaoInicial != null)
 			return acaoInicial.meuAcaoHistoricoSet;
@@ -132,26 +127,6 @@ public class SrAcao extends HistoricoSuporte implements SrSelecionavel, Comparab
 	@Override
 	public boolean semelhante(Assemelhavel obj, int profundidade) {
 		return false;
-	}
-
-	@Override
-	public SrAcao selecionar(String sigla) throws Exception {
-		return selecionar(sigla, null);
-	}
-
-	public SrAcao selecionar(String sigla, List<SrAcao> listaBase)
-			throws Exception {
-		setSigla(sigla);
-		List<SrAcao> itens = buscar(listaBase);
-		if (itens.size() == 0 || itens.size() > 1)
-			return null;
-		return itens.get(0);
-
-	}
-
-	@Override
-	public List<SrAcao> buscar() throws Exception {
-		return buscar(null);
 	}
 
 	public List<SrAcao> buscar(List<SrAcao> listaBase) throws Exception {
@@ -183,27 +158,6 @@ public class SrAcao extends HistoricoSuporte implements SrSelecionavel, Comparab
 			listaFinal.add(acao);
 		}
 		return listaFinal;
-	}
-
-	@Override
-	public void setSigla(String sigla) {
-		if (sigla == null) {
-			tituloAcao = "";
-			siglaAcao = "";
-		} else {
-			String padrao = "([0-9][0-9]).?([0-9][0-9])";
-			final Pattern p1 = Pattern.compile("^" + padrao);
-			final Matcher m1 = p1.matcher(sigla);
-			if (m1.find()) {
-				String s = "";
-				for (int i = 1; i <= m1.groupCount(); i++) {
-					s += m1.group(i);
-					s += (i < m1.groupCount()) ? "." : "";
-				}
-				siglaAcao = s;
-			} else
-				tituloAcao = sigla;
-		}
 	}
 
 	public int getNivel() {
@@ -337,5 +291,15 @@ public class SrAcao extends HistoricoSuporte implements SrSelecionavel, Comparab
 	
 	public SrAcaoVO toVO() {
 		return new SrAcaoVO(this.idAcao, this.tituloAcao, this.siglaAcao, this.getHisIdIni());
+	}
+
+	@Override
+	public String getTitulo() {
+		return tituloAcao;
+	}
+
+	@Override
+	public String getDescricaoAlternativa() {
+		return "";
 	}
 }

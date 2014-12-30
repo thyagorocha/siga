@@ -1129,33 +1129,6 @@ public class Application extends SigaApplication {
 		listarItem(mostrarDesativados);
 	}
 
-
-	public static void selecionarItem(String sigla, SrSolicitacao sol)
-			throws Exception {
-		SrItemConfiguracao sel = new SrItemConfiguracao().selecionar(sigla, sol.getItensDisponiveis());
-		render("@selecionar", sel);
-	}
-
-	public static void buscarItem(String sigla, String nome,
-			SrItemConfiguracao filtro, SrSolicitacao sol) {
-
-		List<SrItemConfiguracao> itens = null;
-
-		try {
-			if (filtro == null)
-				filtro = new SrItemConfiguracao();
-			if (sigla != null && !sigla.trim().equals(""))
-				filtro.setSigla(sigla);
-			itens = filtro.buscar(sol != null
-					&& (sol.solicitante != null || sol.local != null) ? sol
-					.getItensDisponiveis() : null);
-		} catch (Exception e) {
-			itens = new ArrayList<SrItemConfiguracao>();
-		}
-
-		render(itens, filtro, nome, sol);
-	}
-
 	public static void listarAtributoDesativados() throws Exception {
 		listarAtributo(Boolean.TRUE);
 	}
@@ -1389,32 +1362,6 @@ public class Application extends SigaApplication {
 		SrAcao acao = SrAcao.findById(id);
 		acao.salvar();
 		listarAcao(mostrarDesativados);
-	}
-
-	public static void selecionarAcao(String sigla, SrSolicitacao sol)
-			throws Exception {
-
-		SrAcao sel = new SrAcao().selecionar(sigla, sol.getAcoesDisponiveis());
-		render("@selecionar", sel);
-	}
-
-	public static void buscarAcao(String sigla, String nome, SrAcao filtro,
-			SrSolicitacao sol) {
-		List<SrAcao> itens = null;
-
-		try {
-			if (filtro == null)
-				filtro = new SrAcao();
-			if (sigla != null && !sigla.trim().equals(""))
-				filtro.setSigla(sigla);
-			itens = filtro.buscar(sol != null
-					&& (sol.solicitante != null || sol.local != null) ? sol
-					.getAcoesDisponiveis() : null);
-		} catch (Exception e) {
-			itens = new ArrayList<SrAcao>();
-		}
-
-		render(itens, filtro, nome, sol);
 	}
 
 	public static void selecionarSiga(String sigla, String prefixo, String tipo, String nome)

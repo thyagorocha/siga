@@ -182,13 +182,11 @@
 		unblock();
 
 		$("#itemConfiguracaoUnitario").val('');
-		$("#itemConfiguracaoUnitario_descricao").val('');
-		$("#itemConfiguracaoUnitario_sigla").val('');
-		$("#itemConfiguracaoUnitarioSpan").html('');
+		$("#search_itemConfiguracaoUnitario").val('');
+		$("#descr_itemConfiguracaoUnitario").html('');
 		$("#acaoUnitaria").val('');
-		$("#acaoUnitaria_descricao").val('');
-		$("#acaoUnitaria_sigla").val('');
-		$("#acaoUnitariaSpan").html('');
+		$("#search_acaoUnitaria").val('');
+		$("#descr_acaoUnitaria").html('');
 		$("#atendente").val('');
 		$("#atendente_descricao").val('');
 		$("#atendente_sigla").val('');
@@ -210,12 +208,11 @@
 		// Atualiza campos Selecao
 		$("#itemConfiguracaoUnitario").val(itemArray[colunas.idItemConfiguracao]);
 		$("#itemConfiguracaoUnitario_descricao").val(itemArray[colunas.tituloItemConfiguracao]);
-		$("#itemConfiguracaoUnitario_sigla").val(itemArray[colunas.siglaItemConfiguracao]);
-		$("#itemConfiguracaoUnitarioSpan").html(itemArray[colunas.tituloItemConfiguracao]);
+		$("#search_itemConfiguracaoUnitario").val(itemArray[colunas.siglaItemConfiguracao]);
+		$("#descr_itemConfiguracaoUnitario").html(itemArray[colunas.tituloItemConfiguracao]);
 		$("#acaoUnitaria").val(itemArray[colunas.idAcao]);
-		$("#acaoUnitaria_descricao").val(itemArray[colunas.tituloAcao]);
-		$("#acaoUnitaria_sigla").val(itemArray[colunas.siglaAcao]);
-		$("#acaoUnitariaSpan").html(itemArray[colunas.tituloAcao]);
+		$("#search_acaoUnitaria").val(itemArray[colunas.siglaAcao]);
+		$("#descr_acaoUnitaria").html(itemArray[colunas.tituloAcao]);
 		$("#atendente").val(itemArray[colunas.idAtendente]);
 		$("#atendente_descricao").val(itemArray[colunas.descricaoAtendente]);
 		$("#atendente_sigla").val(itemArray[colunas.atendente]);
@@ -414,11 +411,11 @@
           			jPrioridade.value,
 	          		jPrioridade.text,
 					$("#itemConfiguracaoUnitario").val(),                                  // colunas.idItemConfiguracao
-					formatDescricaoLonga($("#itemConfiguracaoUnitario_descricao").val()),  // colunas.tituloItemConfiguracao
-					$("#itemConfiguracaoUnitario_sigla").val(),                            // colunas.siglaItemConfiguracao
+					formatDescricaoLonga($("#descritemConfiguracaoUnitario").html()),  // colunas.tituloItemConfiguracao
+					$("#search_itemConfiguracaoUnitario").val(),                            // colunas.siglaItemConfiguracao
 					$("#acaoUnitaria").val(),											   // colunas.idAcao
-					formatDescricaoLonga($("#acaoUnitaria_descricao").val()),              // colunas.tituloAcao
-					$("#acaoUnitaria_sigla").val(),                        
+					formatDescricaoLonga($("#descr_acaoUnitaria").html()),              // colunas.tituloAcao
+					$("#search_acaoUnitaria").val(),                        
 					idAssociacao,														   // colunas.idAssociacao
 					''                                                                     // colunas.botaoExcluir
 	   			];
@@ -813,15 +810,18 @@ $("[value='Gravar']").click(function(){
 	
 		<div class="gt-form-row gt-width-100">
 			<label>Item</label> 
-			#{selecao tipo:'item',
-				nome:'itemConfiguracaoUnitario',
-				value:itemConfiguracaoUnitario?.atual /}
+			#{selecaoAutocomplete 
+				nome:'itemConfiguracaoUnitario', 
+				value:itemConfiguracaoUnitario?.atual, 
+				items:models.SrItemConfiguracao.listar(false) /}
 		</div>
 	
 		<div class="gt-form-row gt-width-100">
 			<label>A&ccedil;&atilde;o</label> 
-			#{selecao tipo:'acao',
-			nome:'acaoUnitaria', value:acaoUnitaria?.atual /}
+			#{selecaoAutocomplete 
+				nome:'acaoUnitaria', 
+				value:acaoUnitaria?.atual, 
+				items:models.SrAcao.listar(false) /}
 		</div>
 		<div class="gt-form-row">
 			<a href="javascript: gravarAssociacao()" class="gt-btn-medium gt-btn-left">Gravar</a>

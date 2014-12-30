@@ -95,9 +95,9 @@
 	
 	function inserirItemConfiguracao() {
 		var row = [	$("#itemConfiguracao").val(),
-		           	$("#itemConfiguracao_sigla").val(),
-		           	$("#itemConfiguracao_descricao").val(),
-		           	$("#itemConfiguracao_descricao").val(),
+		           	$("#search_itemConfiguracao").val(),
+		           	$("#descr_itemConfiguracao").html(),
+		           	$("#descr_itemConfiguracao").html(),
 		           	"",
 		           	"<a class=\"itemConfiguracao_remove\"><img src=\"/siga/css/famfamfam/icons/delete.png\" style=\"visibility: inline; cursor: pointer\" /></a>"];
 		
@@ -105,26 +105,26 @@
         			
 		// limpando campos do componente de busca
 		$("#itemConfiguracao").val('');
-		$("#itemConfiguracao_descricao").val('');
-		$("#itemConfiguracao_sigla").val('');
-		$("#itemConfiguracaoSpan").html('');
+		$("#descr_itemConfiguracao").html('');
+		$("#search_itemConfiguracao").val('');
+		bloqueiaItemOkSeVazio();
 		
 		modalFechar('itemConfiguracao');
 	}
 	
 	function inserirAcao() {
 		var row = [	$("#acao").val(),
-        			$("#acao_sigla").val(),
-        			$("#acao_descricao").val(),
+        			$("#search_acao").val(),
+        			$("#descr_acao").html(),
         			"<a class=\"acao_remove\"><img src=\"/siga/css/famfamfam/icons/delete.png\" style=\"visibility: inline; cursor: pointer\" /></a>"];
 		
 		acaoTable.api().row.add(row).draw();
 		
 		// limpando campos do componente de busca
 		$("#acao").val('');
-		$("#acao_descricao").val('');
-		$("#acao_sigla").val('');
-		$("#acaoSpan").html('');
+		$("#descr_acao").html('');
+		$("#search_acao").val('');
+		bloqueiaAcaoOkSeVazio();
 		
 		modalFechar('acao');
 	}
@@ -310,7 +310,7 @@
 		$("#modalItemOk").attr("disabled", "disabled");
 	}
 	function bloqueiaItemOkSeVazio(){
-		if ($("#itemConfiguracao").val() && $("#itemConfiguracao_sigla").val() && $("#itemConfiguracaoSpan").text())
+		if ($("#itemConfiguracao").val() && $("#search_itemConfiguracao").val() && $("#descr_itemConfiguracao").html())
 			$("#modalItemOk").removeAttr('disabled');
 		else 
 			$("#modalItemOk").attr("disabled", "disabled");
@@ -321,9 +321,8 @@
 			<div class="gt-form gt-content-box">
 				<div class="gt-form-row">
 					<div class="gt-form-row">
-						<label>Item de Configuração</label> #{selecao tipo:'item',
-							nome:'itemConfiguracao',
-							value:itemConfiguracao?.atual, onblur:'bloqueiaItemOk();', onchange:'bloqueiaItemOkSeVazio();' /}
+						<label>Item de Configuração</label> #{selecaoAutocomplete 
+							nome:'itemConfiguracao', value:itemConfiguracao?.atual, onchange:'bloqueiaItemOkSeVazio();', items:models.SrItemConfiguracao.listar(false) /}
 						<span style="display:none;color: red" id="designacao.itemConfiguracao">Item de Configuração não informado.</span>
 					</div>
 					<div class="gt-form-row">
@@ -343,7 +342,7 @@
 		$("#modalAcaoOk").attr("disabled", "disabled");
 	}
 	function bloqueiaAcaoOkSeVazio(){
-		if ($("#acao").val() && $("#acao_sigla").val() && $("#acaoSpan").text())
+		if ($("#acao").val() && $("#search_acao").val() && $("#descr_acao").html())
 			$("#modalAcaoOk").removeAttr('disabled');
 		else 
 			$("#modalAcaoOk").attr("disabled", "disabled");
@@ -354,8 +353,9 @@
 			<div class="gt-form gt-content-box">
 				<div class="gt-form-row">
 					<div class="gt-form-row">
-						<label>Ação</label> #{selecao tipo:'acao',
-							nome:'acao', value:acao?.atual, onblur:'bloqueiaAcaoOk();', onchange:'bloqueiaAcaoOkSeVazio();' /}
+						<label>Ação</label>
+						#{selecaoAutocomplete 
+							nome:'acao', value:acao?.atual, onchange:'bloqueiaAcaoOkSeVazio();', items:models.SrAcao.listar(false) /} 
 						<span style="display:none;color: red" id="designacao.acao">Ação não informada.</span>
 					</div>
 					<div class="gt-form-row">

@@ -25,11 +25,11 @@ function carregouAcao(response, param){
 </script>
 
 <div class="gt-form-row gt-width-66" >
-	<label>Produto, Servi&ccedil;o ou Sistema relacionado &agrave; Solicita&ccedil;&atilde;o</label> #{selecao tipo:'item',
-	nome:'solicitacao.itemConfiguracao',
-	value:solicitacao.itemConfiguracao, grande:true, onchange:"carregarAcao();notificarCampoMudou('#solicitacaoitemConfiguracao', 'Item', 'solicitacao.itemConfiguracao')",
-	params:'sol.solicitante='+solicitacao.solicitante?.idPessoa+'&sol.local='+solicitacao.local?.idComplexo+
-				'&sol.cadastrante.idPessoa='+cadastrante?.idPessoa /} <span style="color: red">#{error
+	<label>Produto, Servi&ccedil;o ou Sistema</label> #{selecaoAutocomplete
+	nome:'solicitacao.itemConfiguracao', items:solicitacao.itensDisponiveis, nivelMinimoSelecionavel:3,
+	value:solicitacao.itemConfiguracao,
+	onchange:"carregarAcao();notificarCampoMudou('#solicitacaoitemConfiguracao', 'Item', 'solicitacao.itemConfiguracao')", /} 
+	<span style="color: red">#{error
 		'solicitacao.itemConfiguracao' /}</span>
 </div>
 <div id="divAcao">#{include 'Application/exibirAcao.html' /}</div>

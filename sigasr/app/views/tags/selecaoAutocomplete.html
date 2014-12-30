@@ -1,0 +1,171 @@
+#{set nomeclean : _nome.cut('.') /}
+#{if !_nivelMinimoSelecionavel}
+	#{set _nivelMinimoSelecionavel:0 /}
+#{/if}
+<input type="text" size="25" id="search_${nomeclean}" value="${_value?.sigla}">
+<input type="button" value="..." id="button_${nomeclean}" 
+	onclick="modal_${nomeclean}()">
+<span id="descr_${nomeclean}">${_value?.titulo}</span>
+<input type="hidden" name="${_nome}" id="${nomeclean}" value="${_value?.id}" />
+
+#{modal nome:'modal_'+nomeclean, titulo:'Selecione um item', 
+	largura:'screen.width*0.75', altura:'screen.height*0.75',
+	aoAbrir:'colapsaTudo_'+nomeclean+'();' }
+<div class="gt-bd clearfix">
+	<div class="gt-content-box gt-for-table gt-form">
+		<!-- <div class="gt-form-row box-wrapper">
+				<div class="gt-form-row">
+					<input type="text" id="" size="50" onchange="javascript: colapsaTudoExceto_${nomeclean}(buscarPorId_${nomeclean}(this.value))"/>
+				</div>
+		</div> -->
+		<table class="gt-table gt-table-nowrap display" id="tabela">
+			<col width="45%">
+	  		<col width="10%">
+	  		<col width="45%">
+	  		<thead>
+				<tr>
+					<th>T&iacute;tulo
+					</td>
+					<th>C&oacute;digo
+					</td>
+					<th>Descri&ccedil;&atilde;o</th>
+				</tr>
+			</thead>
+			<tbody>
+				#{list items:_items, as:'item'}
+				<tr name="${item.nivel}">
+					<td class="gt-celula-nowrap" style="padding-left: ${item.nivel*13}px;">
+						#{if !item.especifico}
+							<a href="" onclick="clicaNoSinal_${nomeclean}(this); return false;" style="text-decoration: none; font-size: 14pt" name="sinal">-</a>
+						#{/if}
+						#{else}
+							&nbsp;&nbsp;
+						#{/else}
+						#{if item.nivel >= _nivelMinimoSelecionavel}
+							<span id="${item.id}" style="cursor: pointer;" onclick="javascript: seleciona_${nomeclean}(buscarPorId_${nomeclean}(this.id));fechar_modal_${nomeclean}();">${item.titulo}</span>
+						#{/if}
+						#{else}
+							${item.titulo}
+						#{/else}	
+					</td>
+					<td class="gt-celula-nowrap">${item.sigla}</td>
+					<td class="gt-celula-nowrap">#{selecionado sigla:item.descricao,descricao:item.descricao /}</td>
+				</tr>
+				#{/list}
+			</tbody>
+		</table>
+	</div>
+</div>
+#{/modal}
+<script>
+var data_${nomeclean} = [
+                     	#{list items: _items, as:'item'}
+                     		{ label: "${item.sigla} ${item.titulo.raw()}", id: "${item.id}", sigla: "${item.sigla}", titulo: "${item.titulo.raw()}", descricao: "${item.descricao}", descricaoAlternativa: "${item.descricaoAlternativa}", nivel: "${item.nivel}" },
+                     	#{/list}
+                     ];
+                     var buscarPorId_${nomeclean} = function(id){
+                     	return $.grep(data_${nomeclean}, function(e){ return e.id == id; })[0]; 
+                     }
+                     var buscarPorTexto_${nomeclean} = function(txt){
+                     	var nivelMinimoSelecionavel = ${_nivelMinimoSelecionavel};
+                     	var matcher = new RegExp( $.ui.autocomplete.escapeRegex(txt), "i" );
+                     	return $.grep( data_${nomeclean}, function(item) {
+                     		if (item.nivel < nivelMinimoSelecionavel)
+                     			return false;
+                     		return matcher.test(item.label) || matcher.test(normalize_${nomeclean}(item.label)) 
+                     			|| matcher.test(item.descricaoAlternativa) || matcher.test(normalize_${nomeclean}(item.descricaoAlternativa));
+                     	})	
+                     }
+
+                     var accentMap_${nomeclean} = {
+                     		224: "a",    // a with grave
+                     		225: "a",    // a with acute
+                     		226: "a",    // a with circumflex
+                     		227: "a",    // a with tilde
+                     		231: "c",    // c with cedilla
+                     		233: "e",    // e with acute
+                     		234: "e",    // e with circumflex
+                     		237: "i",    // i with acute
+                     		243: "o",    // o with acute
+                     		244: "o",    // o with circumflex
+                     		245: "o",    // o with tilde
+                     		250: "u",    // u with acute
+                     };
+                     var normalize_${nomeclean} = function( term ) {
+                     	var ret = "";
+                     	for ( var i = 0; i < term.length; i++ ) {
+                     		ret += accentMap_${nomeclean}[term.charCodeAt(i)] || term.charAt(i);
+                     	}
+                     	return ret;
+                     };
+
+                     var seleciona_${nomeclean} = function (item){
+                     	$("#search_${nomeclean}").val(item.sigla);
+                     	$("#descr_${nomeclean}").html(item.titulo);
+                     	$("#${nomeclean}").val(item.id);
+                     	${_onchange}
+                     }
+                     var limpa_${nomeclean} = function (){
+                     	$("#search_${nomeclean}").val("");
+                     	$("#descr_${nomeclean}").html("");
+                     	$("#${nomeclean}").val("");
+                     	${_onchange}
+                     }
+                                        	
+	$.widget( "custom.autocomplete_${nomeclean}", $.ui.autocomplete,{
+		/*
+		Edson: descomentar para incluir a descrição em cada item do dropdown
+		_renderItem: function(ul, item) {
+		      return $("<li>")
+		        .append("<a>" + item.label + (item.descricao ? "<br>&nbsp;&nbsp;" + item.descricao : "") + "</a>")
+		        .appendTo( ul );
+		}*/
+	});
+	      
+	$("#search_${nomeclean}").autocomplete_${nomeclean}({
+		delay: 0,
+		source: function( request, response ) {
+          response(buscarPorTexto_${nomeclean}(request.term));
+		},
+		select: function(event, ui){
+			seleciona_${nomeclean}(ui.item);
+    	  	return false;
+		},
+		change: function(event, ui){
+			if (ui.item == null){
+				limpa_${nomeclean}();
+			}
+		}
+    });
+
+
+function clicaNoSinal_${nomeclean}(obj){
+	var ope = obj.innerHTML; 
+	obj.innerHTML = (ope == '+' ? '-' : '+');
+	var tr = $(obj).parent().parent().next();
+	var nivelAtual = parseInt(tr.attr('name'));
+	var nivelMinimo = nivelMaximo = nivelAtual;
+	while (nivelAtual >= nivelMinimo){
+		if (ope == '-')
+			tr.hide();
+		else {
+			if (nivelAtual <= nivelMaximo){
+				tr.show();
+				var span = tr.find('td:first').find("[name='sinal']")[0];
+				var sinal = span ? span.innerHTML : '';
+				nivelMaximo = nivelAtual + (sinal == '-' ? 1 : 0)
+			}
+		}
+		tr = tr.next();
+		nivelAtual = parseInt(tr.attr('name'));
+	}
+}
+function colapsaTudo_${nomeclean}(){
+	var sinais = $("[name='sinal']"); 
+	for(i=0; i<sinais.length; i++ ){
+		if (sinais[i].innerHTML == '-')
+			clicaNoSinal_${nomeclean}(sinais[i]);
+	}
+}
+alert('Plim2');
+</script>

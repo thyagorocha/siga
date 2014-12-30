@@ -8,13 +8,13 @@
                         <form>
                         	<div class="gt-form-row">
 								<label>Item de Configuração</label> 
-								#{selecao tipo:'item', nome:'itemConfiguracao', onchange:'mostraOuEscondeAcao();carregarRelacionados();'/}
+								#{selecaoAutoComplete nome:'itemConfiguracao', onchange:'mostraOuEscondeAcao();carregarRelacionados();', items:models.SrItemConfiguracao.listar(false)/}
 							</div>
 							<div style="display: inline-block" >
 								<div id="gc-ancora-item"></div>
 							</div>
 							<div class="gt-form-row" id="divAcao">
-								<label>Ação</label> #{selecao tipo:'acao', nome:'acao', onchange:'carregarRelacionados();' /}
+								<label>Ação</label> #{selecaoAutocomplete nome:'acao', onchange:'carregarRelacionados();', items:models.SrAcao.listar(false) /}
 							</div>
 							<div style="display: inline-block" >
 								<div id="gc-ancora-item-acao"></div>
@@ -29,14 +29,13 @@
 
 <script>
 function mostraOuEscondeAcao(){
-	if ($('#itemConfiguracao_sigla')[0].value != '')
+	if ($('#search_itemConfiguracao')[0].value != '')
 		$("#divAcao").show();
 	else {
 		$("#divAcao").hide();
 		$("#acao").val('');
-		$("#acao_descricao").val('');
-		$("#acao_sigla").val('');
-		$("#acaoSpan").html('');
+		$("#search_acao").val('');
+		$("#descr_acao").html('');
 		$("#gc-ancora-item").html('');
 		$("#gc-ancora-item-acao").html('');
 	}

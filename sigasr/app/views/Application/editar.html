@@ -82,6 +82,7 @@
 	}
 	
 	function carregarItem(){
+		alert('Plim0');
 		frm = document.getElementById('formSolicitacao');
 		params = '';
 		for (i = 0; i < frm.length; i++){
@@ -92,6 +93,7 @@
 	}
 	
 	function carregouItem(response, param){
+		alert('Plim1');
 		var div = document.getElementById('divItem');
 		div.innerHTML = response;
 		var scripts = div.getElementsByTagName("script");

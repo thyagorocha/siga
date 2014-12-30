@@ -163,13 +163,11 @@
 	function limparDadosAssociacaoModal() {
 
 		$("#itemConfiguracaoUnitario").val('');
-		$("#itemConfiguracaoUnitario_descricao").val('');
-		$("#itemConfiguracaoUnitario_sigla").val('');
-		$("#itemConfiguracaoUnitarioSpan").html('');
+		$("#search_itemConfiguracaoUnitario").val('');
+		$("#descr_itemConfiguracaoUnitario").html('');
 		$("#acaoUnitaria").val('');
-		$("#acaoUnitaria_descricao").val('');
-		$("#acaoUnitaria_sigla").val('');
-		$("#acaoUnitariaSpan").html('');
+		$("#search_acaoUnitaria").val('');
+		$("#descr_acaoUnitaria").html('');
 		$("#checkatributoObrigatorio")[0].checked = false;
 	}
 	
@@ -182,13 +180,11 @@
 
 		// Atualiza campos Selecao
 		$("#itemConfiguracaoUnitario").val(itemArray[colunas.idItemConfiguracao]);
-		$("#itemConfiguracaoUnitario_descricao").val(itemArray[colunas.tituloItemConfiguracao]);
-		$("#itemConfiguracaoUnitario_sigla").val(itemArray[colunas.siglaItemConfiguracao]);
-		$("#itemConfiguracaoUnitarioSpan").html(itemArray[colunas.tituloItemConfiguracao]);
+		$("#descr_itemConfiguracaoUnitario").html(itemArray[colunas.tituloItemConfiguracao]);
+		$("#search_itemConfiguracaoUnitario").val(itemArray[colunas.siglaItemConfiguracao]);
 		$("#acaoUnitaria").val(itemArray[colunas.idAcao]);
-		$("#acaoUnitaria_descricao").val(itemArray[colunas.tituloAcao]);
-		$("#acaoUnitaria_sigla").val(itemArray[colunas.siglaAcao]);
-		$("#acaoUnitariaSpan").html(itemArray[colunas.tituloAcao]);
+		$("#search_acaoUnitaria").val(itemArray[colunas.siglaAcao]);
+		$("#descr_acaoUnitaria").html(itemArray[colunas.tituloAcao]);
 		$("#idConfiguracao").val(itemArray[colunas.idAssociacao]);
 	}
 
@@ -227,11 +223,11 @@
 		var row = [
 					'',                                                                    // colunas.botaoExpandir
 					$("#itemConfiguracaoUnitario").val(),                                  // colunas.idItemConfiguracao
-					formatDescricaoLonga($("#itemConfiguracaoUnitario_descricao").val()),  // colunas.tituloItemConfiguracao
-					$("#itemConfiguracaoUnitario_sigla").val(),                            // colunas.siglaItemConfiguracao
+					formatDescricaoLonga($("#descr_itemConfiguracaoUnitario").html()),  // colunas.tituloItemConfiguracao
+					$("#search_itemConfiguracaoUnitario").val(),                            // colunas.siglaItemConfiguracao
 					$("#acaoUnitaria").val(),											   // colunas.idAcao
-					formatDescricaoLonga($("#acaoUnitaria_descricao").val()),              // colunas.tituloAcao
-					$("#acaoUnitaria_sigla").val(),                                        // colunas.siglaAcao
+					formatDescricaoLonga($("#descr_acaoUnitaria").html()),              // colunas.tituloAcao
+					$("#search_acaoUnitaria").val(),                                        // colunas.siglaAcao
 					$("#checkatributoObrigatorio")[0].checked,							   // colunas.atributoObrigatorio
 					getAtributoObrigatorioString(),										   // colunas.atributoObrigatorioString
 					idAssociacao,														   // colunas.idAssociacao
@@ -426,15 +422,18 @@
 	
 		<div class="gt-form-row gt-width-100">
 			<label>Item</label> 
-			#{selecao tipo:'item',
-				nome:'itemConfiguracaoUnitario',
-				value:itemConfiguracaoUnitario?.atual /}
+			#{selecaoAutocomplete 
+				nome:'itemConfiguracaoUnitario', 
+				value:itemConfiguracaoUnitario?.atual, 
+				items:models.SrItemConfiguracao.listar(false) /}
 		</div>
 	
 		<div class="gt-form-row gt-width-100">
 			<label>Serviço</label> 
-			#{selecao tipo:'acao',
-			nome:'acaoUnitaria', value:acaoUnitaria?.atual /}
+			#{selecaoAutocomplete 
+				nome:'acaoUnitaria', 
+				value:acaoUnitaria?.atual, 
+				items:models.SrAcao.listar(false) /}
 		</div>
 		<div class="gt-form-row">
 			<label>#{checkbox name:'atributoObrigatorio',

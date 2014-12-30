@@ -9,6 +9,10 @@ function ${_nome}(){
 	#{/else}
 }
 
+function fechar_${_nome}(){
+	$("#${_nome}_dialog").dialog("close");
+}
+
 function carregouAjax${_nome}(response, param){
 		$("#${_nome}_dialog").html(response);
 		$("#${_nome}_dialog").dialog( "open" );
@@ -26,6 +30,7 @@ $("#${_nome}_dialog").dialog({
     height: ${_altura?_altura:"'auto'"},
     width: ${_largura?_largura:"'auto'"},
     modal: true,
-    resizable: false
+    resizable: false,
+    open: function(){${_aoAbrir}}
   });
 </script>

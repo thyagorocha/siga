@@ -34,7 +34,7 @@ import br.gov.jfrj.siga.model.Assemelhavel;
 @Table(name = "SR_ITEM_CONFIGURACAO", schema = "SIGASR")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SrItemConfiguracao extends HistoricoSuporte implements
-		SrSelecionavel {
+		SrAutocompleteHierarquico {
 
 	/**
 	 * 
@@ -123,17 +123,13 @@ public class SrItemConfiguracao extends HistoricoSuporte implements
 		return siglaItemConfiguracao;
 	}
 
-	public String getDescricao() {
+	public String getTitulo() {
 		return tituloItemConfiguracao;
 	}
 
 	@Override
 	public void setId(Long id) {
 		this.idItemConfiguracao = id;
-	}
-
-	public void setDescricao(String descricao) {
-		this.tituloItemConfiguracao = descricao;
 	}
 
 	public List<SrItemConfiguracao> getHistoricoItemConfiguracao() {
@@ -149,103 +145,6 @@ public class SrItemConfiguracao extends HistoricoSuporte implements
 		if (sols == null)
 			return null;
 		return sols.get(0);
-	}
-
-	@Override
-	public SrItemConfiguracao selecionar(String sigla) throws Exception {
-		return selecionar(sigla, null);
-	}
-
-	public SrItemConfiguracao selecionar(String sigla,
-			List<SrItemConfiguracao> listaBase) throws Exception {
-		setSigla(sigla);
-		List<SrItemConfiguracao> itens = buscar(listaBase, false);
-		if (itens.size() == 0 || itens.size() > 1 || itens.get(0).isGenerico())
-			return null;
-		return itens.get(0);
-	}
-
-	@Override
-	public List<SrItemConfiguracao> buscar() throws Exception {
-		return buscar(null);
-	}
-
-	public List<SrItemConfiguracao> buscar(List<SrItemConfiguracao> listaBase)
-			throws Exception {
-		return buscar(listaBase, true);
-	}
-
-	public List<SrItemConfiguracao> buscar(List<SrItemConfiguracao> listaBase,
-			boolean comHierarquia) throws Exception {
-
-		List<SrItemConfiguracao> lista = new ArrayList<SrItemConfiguracao>();
-		List<SrItemConfiguracao> listaFinal = new ArrayList<SrItemConfiguracao>();
-
-		if (listaBase == null)
-			lista = listar(Boolean.FALSE);
-		else
-			lista = listaBase;
-
-		if ((siglaItemConfiguracao == null || siglaItemConfiguracao.equals(""))
-				&& (tituloItemConfiguracao == null || tituloItemConfiguracao
-						.equals("")))
-			return lista;
-
-		for (SrItemConfiguracao item : lista) {
-			if (siglaItemConfiguracao != null
-					&& !siglaItemConfiguracao.equals("")
-					&& !(item.siglaItemConfiguracao.toLowerCase()
-							.contains(getSigla())))
-				continue;
-			if (tituloItemConfiguracao != null
-					&& !tituloItemConfiguracao.equals("")) {
-				boolean naoAtende = false;
-				for (String s : tituloItemConfiguracao.toLowerCase().split(
-						"\\s")){
-					if (!item.tituloItemConfiguracao.toLowerCase().contains(s)
-							&& !(item.descricaoSimilaridade != null && item.descricaoSimilaridade
-									.toLowerCase().contains(s)))
-						naoAtende = true;
-				}
-				
-				if (naoAtende)
-					continue;
-			}
-
-			if (comHierarquia)
-				do {
-					if (!listaFinal.contains(item))
-						listaFinal.add(item);
-					item = item.pai;
-					if (item != null)
-						item = item.getAtual();
-				} while (item != null);
-			else
-				listaFinal.add(item);
-		}
-		
-		Collections.sort(listaFinal, new SrItemConfiguracaoComparator());
-		return listaFinal;
-	}
-
-	@Override
-	public void setSigla(String sigla) {
-		if (sigla == null) {
-			siglaItemConfiguracao = "";
-			tituloItemConfiguracao = "";
-		} else {
-			final Pattern p1 = Pattern.compile("^" + MASCARA_JAVA + "$");
-			final Matcher m1 = p1.matcher(sigla);
-			if (m1.find()) {
-				String s = "";
-				for (int i = 1; i <= m1.groupCount(); i++) {
-					s += m1.group(i);
-					s += (i < m1.groupCount() - 1) ? "." : "";
-				}
-				siglaItemConfiguracao = s;
-			} else
-				tituloItemConfiguracao = sigla;
-		}
 	}
 
 	public int getNivel() {
@@ -418,4 +317,15 @@ public class SrItemConfiguracao extends HistoricoSuporte implements
 	public SrItemConfiguracaoVO toVO() {
 		return new SrItemConfiguracaoVO(this.idItemConfiguracao, this.descrItemConfiguracao, this.tituloItemConfiguracao, this.siglaItemConfiguracao, this.getHisIdIni(), this.descricaoSimilaridade);
 	}
+
+	@Override
+	public String getDescricao() {
+		return descrItemConfiguracao;
+	}
+
+	@Override
+	public String getDescricaoAlternativa() {
+		return descricaoSimilaridade;
+	}
+
 }
