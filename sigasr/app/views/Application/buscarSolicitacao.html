@@ -143,17 +143,17 @@
 								</td>
 							
 								<td class="gt-celula-nowrap" style="font-size: 9pt; border-bottom: 1px solid #ccc !important; padding: 7px 0px;" >
-									#{selecionado sigla:sol.solicitante.nomeAbreviado, descricao:sol.solicitante.descricaoIniciaisMaiusculas /}&nbsp;
-									#{selecionado sigla:sol.lotaSolicitante.siglaLotacao,descricao:sol.lotaSolicitante.descricao /}
+									#{selecionado sigla:sol.nomeSolicitanteAbreviado, descricao:sol.descricaoSolicitanteIniciaisMaiusculas /}&nbsp;
+									#{selecionado sigla:sol.siglaLotaSolicitante,descricao:sol.descricaoLotaSolicitante /}
 								</td>
 								<td class="gt-celula-nowrap" style="font-size: 9pt; border-bottom: 1px solid #ccc !important; padding: 7px 0px;">
-									#{selecionado sigla:sol.solicitacaoInicial.dtRegString,descricao:sol.solicitacaoInicial.dtRegString /}
+									#{selecionado sigla:sol.dtReg,descricao:sol.dtReg /}
 								</td>
 								<td class="gt-celula-nowrap" style="font-size: 9pt; border-bottom: 1px solid #ccc !important; padding: 7px 0px;">
-									<b>${sol.getMarcadoresEmHtml(cadastrante, lotaTitular)}</b></td>
+									<b>${sol.situacao}</b></td>
 								<td class="gt-celula-nowrap" style="font-size: 9pt; border-bottom: 1px solid #ccc !important; padding: 7px 0px;">
-									#{selecionado sigla:sol.ultimaMovimentacaoQuePossuaDescricao?.descrMovimentacao,descricao:sol.ultimaMovimentacaoQuePossuaDescricao?.descrMovimentacao /}</td>
-								<td>${sol.isAtivo()}</td>
+									#{selecionado sigla:sol.descrUltimaMovimentacao,descricao:sol.descrUltimaMovimentacao /}</td>
+								<td></td>
 									
 							</tr>
 						#{/list}

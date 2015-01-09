@@ -5,12 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import models.SrAcordo;
 import models.SrAtributo;
 import models.SrAtributoSolicitacao;
 import models.SrSolicitacao;
+import models.SrSolicitacaoVO;
 import play.db.jpa.JPA;
 import br.gov.jfrj.siga.dp.CpMarcador;
 import br.gov.jfrj.siga.dp.DpLotacao;
@@ -68,17 +70,26 @@ public class SrSolicitacaoFiltro extends SrSolicitacao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Object[]> buscarSimplificado() throws Exception{
-		String query = montarBusca("select sol.idSolicitacao, sol.descrSolicitacao, sol.codigo, item.tituloItemConfiguracao"
-				+ " from SrSolicitacao sol inner join sol.itemConfiguracao as item ");
+	public List<SrSolicitacaoVO> buscarVO() throws Exception{
+		String query = montarBusca("select idSolicitacao, JSON, dtAtualizacaoJson, "
+				+ "(select max(dtIniMov) from SrMovimentacao where solicitacao = sol.idSolicitacao) as dtUltMov "
+				+ "from SrSolicitacao sol ");
 		
-		List<Object[]> listaRetorno =  JPA
+		List<Object[]> lista =  JPA
 				.em()
-				.createQuery( query )
-				.setMaxResults(10)
+				.createQuery(query)
 				.getResultList();
+		List<SrSolicitacaoVO> listaFinal = new ArrayList<SrSolicitacaoVO>();
 		
-		return listaRetorno;
+		for (Object[] obj : lista) {
+			Long idSolicitacao = (Long) obj[0];
+			String JSON = (String) obj[1];
+			Date dtAtualizacaoJSON = (Date) obj[2];
+			Date dtUltMov = (Date) obj[3];
+			listaFinal.add(SrSolicitacaoVO.get(idSolicitacao, JSON, dtAtualizacaoJSON, dtUltMov));
+		}
+		
+		return listaFinal;
 	}
 	
 	private String montarBusca(String queryString) {

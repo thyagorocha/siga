@@ -74,6 +74,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.google.gson.Gson;
+
 import play.db.jpa.JPA;
 import play.mvc.Router;
 import util.Cronometro;
@@ -248,6 +250,14 @@ public class SrSolicitacao extends HistoricoSuporte implements SrSelecionavel {
 	@Column(name = "FECHADO_AUTOMATICAMENTE")
 	@Type(type = "yes_no")
 	public Boolean fechadoAutomaticamente;
+	
+	@Lob
+	@Column(name = "JSON_SOLICITACAO", length = 8192)
+	public String JSON; 
+	
+	@Column(name = "DT_ATUALIZACAO_JSON")
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date dtAtualizacaoJson;
 
 	public SrSolicitacao() {
 
@@ -1552,6 +1562,12 @@ public class SrSolicitacao extends HistoricoSuporte implements SrSelecionavel {
 					acordos.add(acordoAtual);
 			}
 		}
+	}
+	
+	public void updateJSONAndSave() {
+		JSON = new Gson().toJson(new SrSolicitacaoVO(this));
+		dtAtualizacaoJson = new Date();
+		save();
 	}
 
 	private void checarEPreencherCampos() throws Exception {

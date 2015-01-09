@@ -29,10 +29,9 @@ import models.SrItemConfiguracao;
 import models.SrLista;
 import models.SrMovimentacao;
 import models.SrObjetivoAtributo;
-import models.SrOperador;
 import models.SrPesquisa;
-import models.SrPrioridade;
 import models.SrSolicitacao;
+import models.SrSolicitacaoVO;
 import models.SrTipoAtributo;
 import models.SrTipoMotivoEscalonamento;
 import models.SrTipoMotivoPendencia;
@@ -191,7 +190,7 @@ public class Application extends SigaApplication {
 			throws Exception{
 		
 		solicitacao.setAtributoSolicitacaoMap(atributoSolicitacaoMap);
-		List<Object[]> solicitacoesRelacionadas = solicitacao.buscarSimplificado();
+		List<SrSolicitacaoVO> solicitacoesRelacionadas = solicitacao.buscarVO();
 		render(solicitacoesRelacionadas);
 	}
 
@@ -402,35 +401,6 @@ public class Application extends SigaApplication {
 		SrSolicitacao sol = SrSolicitacao.findById(id);
 		sol.desentranhar(lotaTitular(), cadastrante(), justificativa);
 		exibir(id, todoOContexto(), ocultas());
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static void listar(SrSolicitacaoFiltro filtro) throws Exception {
-		List<SrSolicitacao> list;
-		
-		if (filtro.pesquisar) {
-			list = filtro.buscar();
-		} else {
-			list = new ArrayList<SrSolicitacao>();
-		}
-		
-		// Montando o filtro...
-		String[] tipos = new String[] { "Pessoa", "Lota��o" };
-		List<CpMarcador> marcadores = JPA.em()
-				.createQuery("select distinct cpMarcador from SrMarca")
-				.getResultList();
-		
-		// DB1: Trecho de código que garante que só sejam exibidos as solicitações para a lotação cadastrante
-		List<SrSolicitacao> listaSolicitacao = new ArrayList<SrSolicitacao>();
-		for (SrSolicitacao sol : list) 
-			if (!sol.isMarcada(CpMarcador.MARCADOR_SOLICITACAO_EM_ELABORACAO))
-					listaSolicitacao.add(sol);
-			else
-				if (sol.lotaCadastrante == lotaTitular())
-					listaSolicitacao.add(sol);
-		
-		List<SrAtributo> tiposAtributosDisponiveisAdicao = atributosDisponiveisAdicaoConsulta(filtro);
-		render(listaSolicitacao, tipos, marcadores, filtro, tiposAtributosDisponiveisAdicao);
 	}
 	
 	public static void estatistica() throws Exception {
@@ -681,17 +651,17 @@ public class Application extends SigaApplication {
 	@SuppressWarnings("unchecked")
 	public static void buscarSolicitacao(SrSolicitacaoFiltro filtro, String nome, boolean popup) {
 
-		List<SrSolicitacao> listaSolicitacao = new ArrayList<SrSolicitacao>();
+		List<SrSolicitacaoVO> listaSolicitacao = new ArrayList<SrSolicitacaoVO>();
 
 		try {
 			if (filtro.pesquisar) {
-				listaSolicitacao = filtro.buscar();
+				listaSolicitacao = filtro.buscarVO();
 			} else {
-				listaSolicitacao = new ArrayList<SrSolicitacao>();
+				listaSolicitacao = new ArrayList<SrSolicitacaoVO>();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			listaSolicitacao = new ArrayList<SrSolicitacao>();
+			listaSolicitacao = new ArrayList<SrSolicitacaoVO>();
 		}
 		
 		// Montando o filtro...
@@ -1809,16 +1779,5 @@ public class Application extends SigaApplication {
 	public static void exibirPrioridade(SrSolicitacao solicitacao) {
 		solicitacao.associarPrioridadePeloGUT();
 		render(solicitacao);
-	}
-	
-	public static void atualizarFechamentoAutomatico() throws Exception {
-		List<SrSolicitacao> todasSolicitacoes = SrSolicitacao.findAll();
-		for (SrSolicitacao sol : todasSolicitacoes) {
-			if (sol.isPai()) {
-				sol.setFechadoAutomaticamente(false);
-				sol.salvar(cadastrante(), lotaTitular());
-			}
-		}
-		renderText("Atualização realizada com sucesso");
 	}
 }
